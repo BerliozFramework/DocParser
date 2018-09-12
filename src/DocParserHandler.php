@@ -21,7 +21,7 @@ use Berlioz\DocParser\Exception\DocParserException;
 use Berlioz\DocParser\File\FileInterface;
 use Berlioz\DocParser\Loader\LoaderInterface;
 
-class Handler implements CacheAwareInterface
+class DocParserHandler implements CacheAwareInterface
 {
     use CacheAwareTrait;
     /** @var \Berlioz\DocParser\Loader\LoaderInterface Loader */
@@ -32,7 +32,7 @@ class Handler implements CacheAwareInterface
     private $documentation;
 
     /**
-     * Handler constructor.
+     * DocParserHandler constructor.
      *
      * @param \Berlioz\DocParser\Loader\LoaderInterface    $loader
      * @param \Berlioz\DocParser\Cache\CacheInterface|null $cache
