@@ -251,7 +251,7 @@ class Generator
     {
         $metas = $page->getMetas();
 
-        foreach ($queryHtml->find('meta[name^="websitetext-"]') as $metaEl) {
+        foreach ($queryHtml->find('meta[name^="docparser-"]') as $metaEl) {
             $value = trim($metaEl->attr('content'));
 
             switch ($value) {
