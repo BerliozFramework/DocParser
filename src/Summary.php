@@ -111,4 +111,48 @@ class Summary implements EntryIterableInterface
 
         return $this;
     }
+
+    /**
+     * Find by page.
+     *
+     * @param \Berlioz\DocParser\File\Page $page
+     *
+     * @return \Berlioz\DocParser\Summary\Entry|null
+     */
+    public function findByPage(Page $page): ?Entry
+    {
+        if (!empty($titles = $page->getMeta('index'))) {
+            $titles = explode(';', $titles);
+
+            return $this->findByTitles($titles);
+        }
+
+        return null;
+    }
+
+    /**
+     * Find by titles.
+     *
+     * @param array $titles
+     *
+     * @return \Berlioz\DocParser\Summary\Entry|null
+     */
+    public function findByTitles(array $titles): ?Entry
+    {
+        $titles = $this->filterTitles($titles);
+
+        // Search
+        if (($nbTitles = count($titles)) > 0) {
+            $iTitle = 0;
+            $entry = $this;
+            do {
+                $entry = $entry->getEntryByTitle($titles[$iTitle]);
+                $iTitle++;
+            } while (!is_null($entry) && $iTitle < $nbTitles);
+
+            return $entry;
+        }
+
+        return null;
+    }
 }
