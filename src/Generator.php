@@ -261,7 +261,7 @@ class Generator
                     break;
             }
 
-            $metas[trim(substr($metaEl->attr('name'), 12))] = $value;
+            $metas[trim(substr($metaEl->attr('name'), 10))] = $value;
             $metaEl->remove();
         }
 
