@@ -20,7 +20,7 @@ use Berlioz\DocParser\Exception\CacheException;
 use Berlioz\DocParser\File\FileInterface;
 use Berlioz\DocParser\File\ParsedFileInterface;
 
-class Psr16Bridge implements CacheInterface
+class Psr16Adapter implements CacheInterface
 {
     const PREFIX = 'BERLIOZ_DOCPARSER';
     /** @var \Psr\SimpleCache\CacheInterface */
@@ -29,7 +29,7 @@ class Psr16Bridge implements CacheInterface
     private $ttl;
 
     /**
-     * Psr16Bridge constructor.
+     * Psr16Adapter constructor.
      *
      * @param \Psr\SimpleCache\CacheInterface $psr16CacheManager Cache manager
      * @param int|null                        $ttl               TTL for doc cache
