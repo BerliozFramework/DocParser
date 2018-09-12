@@ -1,1 +1,1 @@
-# DocParser
+# Berlioz Doc Parser
