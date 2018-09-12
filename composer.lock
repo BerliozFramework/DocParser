@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a877569047e8ff760d35daa5ead880df",
+    "content-hash": "c1c0018ac6151d565deab9ecdfffe3ec",
     "packages": [
         {
             "name": "berlioz/html-selector",
@@ -1899,7 +1899,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1",
+        "php": "^7.1",
         "ext-fileinfo": "*",
         "ext-mbstring": "*",
         "ext-json": "*"
