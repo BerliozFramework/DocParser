@@ -259,6 +259,12 @@ class Generator
                 case 'false':
                     $value = ($value == 'true');
                     break;
+                default:
+                    if (($filteredValue = filter_var($value, FILTER_VALIDATE_INT)) !== false) {
+                        $value = $filteredValue;
+                    } elseif (($filteredValue = filter_var($value, FILTER_VALIDATE_FLOAT)) !== false) {
+                        $value = $filteredValue;
+                    }
             }
 
             $metas[trim(substr($metaEl->attr('name'), 10))] = $value;
