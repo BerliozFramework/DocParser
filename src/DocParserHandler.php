@@ -106,10 +106,6 @@ class DocParserHandler implements CacheAwareInterface
      */
     private function getVersionFromPath(string $path): ?string
     {
-        if (!$this->getOption('versioned', false)) {
-            return null;
-        }
-
         $path = ltrim($path, '/');
         $pathExploded = explode('/', $path, 2);
 
@@ -127,10 +123,6 @@ class DocParserHandler implements CacheAwareInterface
      */
     public function getVersionsLinks(FileInterface $file = null): array
     {
-        if (!$this->getOption('versioned', false)) {
-            throw new DocParserException('Unable to get versions links because the documentation is not versioned');
-        }
-
         $initialPath = sprintf('/%s/%s', $file->getDocumentationVersion()->getVersion(), ltrim($file->getUrlPath(), '/'));
         $versionsLinks = [];
         $versions = $this->getDocumentation()->getVersions();
@@ -158,21 +150,27 @@ class DocParserHandler implements CacheAwareInterface
     /**
      * Handle.
      *
-     * @param string $path
+     * @param string      $path
+     * @param string|null $version
      *
      * @return \Berlioz\DocParser\File\FileInterface|null
      * @throws \Berlioz\DocParser\Exception\DocParserException
      */
-    public function handle(string $path): ?FileInterface
+    public function handle(string $path, ?string $version = null): ?FileInterface
     {
-        $versionPath = $this->getVersionFromPath($path);
-        $documentationVersion = $this->getDocumentation()->getVersion($versionPath ?? 'master');
+        if (is_null($version)) {
+            $versions = $this->getDocumentation()->getVersions();
+            $version = reset($versions);
+        }
+
+        if (empty($version)) {
+            return null;
+        }
+
+        $documentationVersion = $this->getDocumentation()->getVersion($version);
 
         // Find file
         $path = '/' . ltrim($path, '/');
-        if (!is_null($versionPath)) {
-            $path = substr($path, (mb_strlen($versionPath) + 1));
-        }
 
         if (substr($path, -1) == '/') {
             foreach ((array) $this->getOption('fileIndex', ['index', 'readme', 'default']) as $indexFilename) {

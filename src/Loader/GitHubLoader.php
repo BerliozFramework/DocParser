@@ -66,7 +66,7 @@ class GitHubLoader extends AbstractLoader implements LoaderInterface
      */
     public function getUniqId(): string
     {
-        return sha1(implode('-', $this->options));
+        return sha1(serialize($this->options));
     }
 
     /**
@@ -98,12 +98,19 @@ EOD
             if (($jsonResponse = json_decode((string) $response->getBody(), true)) !== false) {
                 if (!empty($branches = $jsonResponse['data']['repository']['refs']['edges'])) {
                     foreach ($branches as $branch) {
-                        if (empty($this->getOption('branches'))
-                            || (is_array($this->getOption('branches')) && in_array($branch['node']['name'], $this->getOption('branches')))) {
-                            $this->versions[] = $branch['node']['name'];
-                        }
+                        $this->versions[] = $branch['node']['name'];
                     }
                 }
+            }
+
+            // Filter branches
+            if (is_array($this->getOption('branches'))) {
+                $this->versions =
+                    array_filter(
+                        $this->versions,
+                        function ($value) {
+                            return in_array($value, $this->getOption('branches'));
+                        });
             }
         }
 
@@ -113,12 +120,8 @@ EOD
     /**
      * @inheritdoc
      */
-    public function getFiles(?string $version): array
+    public function getFiles(string $version): array
     {
-        if (empty($version)) {
-            $version = $this->getOption('branch', 'master');
-        }
-
         $this->loadFromGithub($version);
 
         return $this->files[$version];

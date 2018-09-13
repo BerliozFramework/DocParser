@@ -50,7 +50,7 @@ class FileSystemLoader extends AbstractLoader implements LoaderInterface
      */
     public function getUniqId(): string
     {
-        return sha1($this->getBasePath() . '-' . implode('-', $this->options));
+        return sha1($this->getBasePath() . '-' . serialize($this->options));
     }
 
     /**
@@ -59,14 +59,25 @@ class FileSystemLoader extends AbstractLoader implements LoaderInterface
     public function getVersions(): array
     {
         if (is_null($this->versions)) {
-            $this->versions = [];
+            if ($this->getOption('versioned', false)) {
+                $this->versions = ['master'];
+            } else {
+                $this->versions = [];
 
-            foreach (scandir($this->getBasePath()) as $filename) {
-                if (!in_array($filename, ['.', '..']) && is_dir($dirname = $this->getBasePath() . DIRECTORY_SEPARATOR . $filename)) {
-                    if (empty($this->getOption('versions'))
-                        || (is_array($this->getOption('versions')) && in_array(basename($dirname), $this->getOption('versions')))) {
+                foreach (scandir($this->getBasePath()) as $filename) {
+                    if (!in_array($filename, ['.', '..']) && is_dir($dirname = $this->getBasePath() . DIRECTORY_SEPARATOR . $filename)) {
                         $this->versions[] = basename($dirname);
                     }
+                }
+
+                // Filter branches
+                if (is_array($this->getOption('versions'))) {
+                    $this->versions =
+                        array_filter(
+                            $this->versions,
+                            function ($value) {
+                                return in_array($value, $this->getOption('versions'));
+                            });
                 }
             }
         }
@@ -85,7 +96,7 @@ class FileSystemLoader extends AbstractLoader implements LoaderInterface
 
         if (!isset($this->files[$version])) {
             $path = $this->getBasePath();
-            if (!empty($version)) {
+            if ($this->getOption('versioned', false)) {
                 $path .= sprintf('/%s', $version);
             }
 
@@ -157,7 +168,7 @@ class FileSystemLoader extends AbstractLoader implements LoaderInterface
     public function getFile(string $version, string $path): FileInterface
     {
         $fullPath = $this->getBasePath();
-        if (!empty($version)) {
+        if ($this->getOption('versioned', false)) {
             $fullPath .= sprintf('/%s', $version);
         }
         $fullPath = sprintf('%s/%s', $fullPath, ltrim($path, '\\/'));

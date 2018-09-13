@@ -14,8 +14,6 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Loader;
 
-use Berlioz\DocParser\File\FileInterface;
-
 interface LoaderInterface
 {
     /**
@@ -38,10 +36,10 @@ interface LoaderInterface
     /**
      * Get files.
      *
-     * @param string|null $version Version
+     * @param string $version Version
      *
      * @return \Berlioz\DocParser\File\FileInterface[]
      * @throws \Berlioz\DocParser\Exception\LoaderException
      */
-    public function getFiles(?string $version): array;
+    public function getFiles(string $version): array;
 }

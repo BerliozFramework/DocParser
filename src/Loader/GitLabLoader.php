@@ -65,7 +65,7 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
      */
     public function getUniqId(): string
     {
-        return sha1(implode('-', $this->options));
+        return sha1(serialize($this->options));
     }
 
     /**
@@ -83,13 +83,21 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
 
             if (($jsonResponse = json_decode((string) $response->getBody(), true)) !== false) {
                 foreach ($jsonResponse as $branch) {
-                    if (empty($this->getOption('branches'))
-                        || (is_array($this->getOption('branches')) && in_array($branch['name'], $this->getOption('branches')))) {
-                        $this->versions[$branch['name']] = new \DateTime($branch['commit']['committed_date']);
-                    }
+                    $this->versions[$branch['name']] = new \DateTime($branch['commit']['committed_date']);
                 }
             } else {
                 throw new LoaderException('Unable to get versions');
+            }
+
+            // Filter branches
+            if (is_array($this->getOption('branches'))) {
+                $this->versions =
+                    array_filter(
+                        $this->versions,
+                        function ($key) {
+                            return in_array($key, $this->getOption('branches'));
+                        },
+                        ARRAY_FILTER_USE_KEY);
             }
         }
 
@@ -99,12 +107,8 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
     /**
      * @inheritdoc
      */
-    public function getFiles(?string $version): array
+    public function getFiles(string $version): array
     {
-        if (empty($version)) {
-            $version = $this->getOption('branch', 'master');
-        }
-
         $this->loadFromGitLab($version);
 
         return $this->files[$version];
