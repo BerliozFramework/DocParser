@@ -98,21 +98,6 @@ class DocParserHandler implements CacheAwareInterface
     }
 
     /**
-     * Get version extracted from path.
-     *
-     * @param string $path
-     *
-     * @return null|string
-     */
-    private function getVersionFromPath(string $path): ?string
-    {
-        $path = ltrim($path, '/');
-        $pathExploded = explode('/', $path, 2);
-
-        return $pathExploded[0] ?? null;
-    }
-
-    /**
      * Get versions links of documentation.
      *
      * @param \Berlioz\DocParser\File\FileInterface $file File
