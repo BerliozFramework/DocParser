@@ -66,8 +66,10 @@ class DocParserHandler implements CacheAwareInterface
      * Generate documentation from loader.
      *
      * @throws \Berlioz\DocParser\Exception\DocParserException
+     *
+     * @return \Berlioz\DocParser\Documentation
      */
-    private function generate()
+    protected function generate(): Documentation
     {
         $docGenerator = new Generator($this->options);
 
