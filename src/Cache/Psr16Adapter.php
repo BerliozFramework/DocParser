@@ -121,7 +121,7 @@ class Psr16Adapter implements CacheInterface
             }
         }
 
-        if (!$this->cacheManager->set($this->getCacheKey($documentation->getUniqid(), 'files'), $cacheKeys)) {
+        if (!$this->cacheManager->set($this->getCacheKey($documentation->getUniqid(), 'files'), $cacheKeys, $this->ttl)) {
             throw new CacheException(sprintf('Unable to save files index of documentation "%s" in cache', $documentation->getUniqid()));
         }
 
