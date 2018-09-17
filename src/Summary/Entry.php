@@ -173,13 +173,7 @@ class Entry implements EntryIterableInterface
      */
     public function setOrder(?int $order): Entry
     {
-        $oldOrder = $this->order;
         $this->order = $order;
-
-        // Order parent
-        if ($oldOrder != $this->order && !is_null($this->getParentEntry())) {
-            $this->getParentEntry()->orderEntries();
-        }
 
         return $this;
     }

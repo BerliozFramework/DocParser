@@ -41,9 +41,12 @@ trait EntryIterable
 
     /**
      * Order entries.
+     *
+     * @return static
      */
-    protected function orderEntries()
+    public function orderEntries()
     {
+        // Order entries
         usort($this->entries,
             function ($el1, $el2) {
                 /** @var \Berlioz\DocParser\Summary\Entry $el1 */
@@ -64,6 +67,13 @@ trait EntryIterable
                     }
                 }
             });
+
+        // Children
+        foreach ($this->entries as $entry) {
+            $entry->orderEntries();
+        }
+
+        return $this;
     }
 
     /**
@@ -123,9 +133,6 @@ trait EntryIterable
             }
         }
 
-        // Order
-        $this->orderEntries();
-
         return $this;
     }
 
@@ -144,9 +151,6 @@ trait EntryIterable
         } else {
             $entry->setParentEntry(null);
         }
-
-        // Order
-        $this->orderEntries();
 
         return $this;
     }

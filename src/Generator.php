@@ -188,7 +188,10 @@ class Generator
                 throw new GeneratorException(sprintf('Unable to do HTML treatment of page "%s"', $page->getFilename()), 0, $e);
             }
 
-            $documentation->getSummary()->addPage($page);
+            $documentation
+                ->getSummary()
+                ->addPage($page)
+                ->orderEntries();
         }
     }
 
@@ -447,7 +450,7 @@ class Generator
             }
         }
 
-        $page->setSummary($summary);
+        $page->setSummary($summary->orderEntries());
     }
 
     /////////////
