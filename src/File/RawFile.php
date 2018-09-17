@@ -177,7 +177,17 @@ class RawFile implements FileInterface
             $link = $link->getUrlPath();
         }
 
-        return Generator::resolveAbsolutePath($this->getUrlPath(), $link);
+        $link = explode('#', $link);
+        $anchor = $link[1] ?? null;
+        $link = $link[0];
+
+        $relativePath = Generator::resolveAbsolutePath($this->getUrlPath(), $link);
+
+        if ($relativePath == './' . basename($this->getUrlPath())) {
+            $relativePath = '' . (!empty($anchor) ? '#' . $anchor : '');
+        }
+
+        return $relativePath;
     }
 
     /**
