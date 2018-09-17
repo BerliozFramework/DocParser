@@ -184,8 +184,10 @@ class RawFile implements FileInterface
         $relativePath = Generator::resolveAbsolutePath($this->getUrlPath(), $link);
 
         if ($relativePath == './' . basename($this->getUrlPath())) {
-            $relativePath = '' . (!empty($anchor) ? '#' . $anchor : '');
+            $relativePath = '';
         }
+
+        $relativePath .= (!empty($anchor) ? '#' . $anchor : '');
 
         return $relativePath;
     }
