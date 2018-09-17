@@ -288,7 +288,7 @@ class Generator
     {
         // Replacement of links
         foreach ($queryHtml->find('a[href]') as $link) {
-            $href = $this->resolveRelativePath($page->getFilename(), $link->attr('href'));
+            $href = $this->resolveAbsolutePath($page->getFilename(), $link->attr('href'));
 
             if ($href !== false) {
                 if (is_null($pageLinked = $documentation->getFiles()->findByFilename($href))) {
@@ -339,7 +339,7 @@ class Generator
     {
         foreach ($queryHtml->find('[src]') as $mediaEl) {
             $mediaElSrc = $mediaEl->attr('src');
-            $href = $this->resolveRelativePath($page->getFilename(), $mediaElSrc);
+            $href = $this->resolveAbsolutePath($page->getFilename(), $mediaElSrc);
 
             // Internal link
             if ($href !== false) {
@@ -455,19 +455,18 @@ class Generator
     /////////////
 
     /**
-     * Resolve relative path.
+     * Resolve absolute path.
      *
      * @param string $initialPath
      * @param string $path
      *
      * @return string|false
      */
-    public static function resolveRelativePath(string $initialPath, string $path)
+    public static function resolveAbsolutePath(string $initialPath, string $path)
     {
         if ((substr($path, 0, 1) == '/' && substr($path, 0, 2) !== '//') ||
             substr($path, 0, 2) == './' ||
             substr($path, 0, 3) == '../') {
-
             // Unification of directories separators
             $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
             $finalPath = dirname($initialPath);
@@ -496,43 +495,55 @@ class Generator
     }
 
     /**
-     * Resolve absolute path.
+     * Resolve relative path.
      *
      * @param string $srcPath
      * @param string $dstPath
      *
      * @return string
      */
-    public static function resolveAbsolutePath(string $srcPath, string $dstPath): string
+    public static function resolveRelativePath(string $srcPath, string $dstPath): string
     {
-        $srcRelativePath = str_replace('\\', '/', $srcPath);
-        $dstRelativePath = str_replace('\\', '/', $dstPath);
-        $srcRelativePath = explode('/', $srcRelativePath);
-        $dstRelativePath = explode('/', $dstRelativePath);
+        $srcAbsolutePath = str_replace('\\', '/', $srcPath);
+        $dstAbsolutePath = str_replace('\\', '/', $dstPath);
+        $srcAbsolutePath = explode('/', $srcAbsolutePath);
+        $dstAbsolutePath = explode('/', $dstAbsolutePath);
 
-        $srcDepth = count($srcRelativePath) - 1;
-        $dstDepth = count($dstRelativePath) - 1;
+        // Get filename of destination path
+        $dstFilename = null;
+        if (substr($dstPath, -1, 1) != '/') {
+            $dstFilename = end($dstAbsolutePath);
+            unset($dstAbsolutePath[count($dstAbsolutePath) - 1]);
+        }
+
+        $srcDepth = count($srcAbsolutePath) - 1;
+        $dstDepth = count($dstAbsolutePath) - 1;
         $differentPath = false;
 
         for ($i = 0; $i < $srcDepth; $i++) {
             if ($differentPath === false) {
-                if (!isset($dstRelativePath[$i]) || $srcRelativePath[$i] !== $dstRelativePath[$i]) {
+                if (!isset($dstAbsolutePath[$i]) || $srcAbsolutePath[$i] !== $dstAbsolutePath[$i]) {
                     $differentPath = $i;
                 }
             }
         }
 
-        $absolutePath = '';
+        $relativePath = '';
         if ($differentPath !== false) {
-            $absolutePath .= str_repeat('../', $srcDepth - $differentPath);
-            $absolutePath .= implode('/', array_slice($dstRelativePath, $differentPath, $dstDepth));
+            $relativePath .= str_repeat('../', $srcDepth - $differentPath);
+            $relativePath .= implode('/', array_slice($dstAbsolutePath, $differentPath, $dstDepth));
         } else {
-            $absolutePath .= './';
-            $absolutePath .= implode('/', array_slice($dstRelativePath, $srcDepth, $dstDepth));
+            $relativePath .= './';
+            $relativePath .= implode('/', array_slice($dstAbsolutePath, $srcDepth, $dstDepth));
         }
 
-        $absolutePath = preg_replace('#/{2,}#', '/', $absolutePath);
+        // Add file to relative path
+        if (!is_null($dstFilename)) {
+            $relativePath .= '/' . $dstFilename;
+        }
 
-        return $absolutePath;
+        $relativePath = preg_replace('#/{2,}#', '/', $relativePath);
+
+        return $relativePath;
     }
 }

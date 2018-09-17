@@ -126,7 +126,7 @@ class DocParserHandler implements CacheAwareInterface
 
                 if (!is_null($versionFile)) {
                     $versionsLinks[$version] = sprintf('/%s/%s', $documentationVersion->getVersion(), ltrim($file->getUrlPath(), '/'));
-                    $versionsLinks[$version] = Generator::resolveAbsolutePath($initialPath, $versionsLinks[$version]);
+                    $versionsLinks[$version] = Generator::resolveRelativePath($initialPath, $versionsLinks[$version]);
                 }
             }
         }
