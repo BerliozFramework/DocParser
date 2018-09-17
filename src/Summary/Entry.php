@@ -26,7 +26,7 @@ class Entry implements EntryIterableInterface
     /** @var int|null Order */
     private $order;
     /** @var bool Visible ? */
-    private $visible = false;
+    private $visible = true;
     /** @var bool Selected ? */
     private $selected = false;
     /** @var \Berlioz\DocParser\Summary\Entry Parent */
@@ -191,7 +191,11 @@ class Entry implements EntryIterableInterface
      */
     public function isVisible(): bool
     {
-        return $this->visible ?? false;
+        if (is_null($this->visible)) {
+            return true;
+        }
+
+        return $this->visible;
     }
 
     /**

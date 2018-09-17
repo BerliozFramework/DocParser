@@ -427,8 +427,7 @@ class Generator
                 $entry = new Entry();
                 $entry->setTitle($header->text())
                       ->setUrl($page->getUrlPath())
-                      ->setId($id)
-                      ->setVisible($headerLevel <= $this->getOption('parsing.summary_max_level'));
+                      ->setId($id);
 
                 // Add entry to summary hierarchy
                 {
