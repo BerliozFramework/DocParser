@@ -118,7 +118,7 @@ class Page extends RawFile implements ParsedFileInterface
             $url = '/' . ltrim($url, '/');
         }
 
-        return $url;
+        return mb_strtolower($url);
     }
 
     /**

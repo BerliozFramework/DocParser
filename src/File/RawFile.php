@@ -165,7 +165,7 @@ class RawFile implements FileInterface
      */
     public function getUrlPath(): string
     {
-        return $this->url_path ?? str_replace('\\', '/', $this->getFilename());
+        return mb_strtolower($this->url_path ?? str_replace('\\', '/', $this->getFilename()));
     }
 
     /**
@@ -189,7 +189,7 @@ class RawFile implements FileInterface
 
         $relativePath .= (!empty($anchor) ? '#' . $anchor : '');
 
-        return $relativePath;
+        return mb_strtolower($relativePath);
     }
 
     /**
