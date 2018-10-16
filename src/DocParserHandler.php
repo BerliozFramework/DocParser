@@ -110,7 +110,10 @@ class DocParserHandler implements CacheAwareInterface
      */
     public function getVersionsLinks(FileInterface $file = null): array
     {
-        $initialPath = sprintf('/%s/%s', $file->getDocumentationVersion()->getVersion(), ltrim($file->getUrlPath(), '/'));
+        $initialPath = '';
+        if (!is_null($file)) {
+            $initialPath = sprintf('/%s/%s', $file->getDocumentationVersion()->getVersion(), ltrim($file->getUrlPath(), '/'));
+        }
         $versionsLinks = [];
         $versions = $this->getDocumentation()->getVersions();
 
