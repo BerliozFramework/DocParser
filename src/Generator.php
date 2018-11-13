@@ -347,7 +347,7 @@ class Generator
             // Internal link
             if ($href !== false) {
                 if (is_null($pageMedia = $documentation->getFiles()->findByFilename($href))) {
-                    throw new GeneratorException(sprintf('Link to "%s" broken in file "%s"', $mediaEl->attr('href'), $page->getFilename()));
+                    throw new GeneratorException(sprintf('Link to "%s" broken in file "%s"', $mediaEl->attr('src'), $page->getFilename()));
                 }
 
                 $mediaEl->attr('src', $page->getRelativeUrlPathFor($pageMedia));
