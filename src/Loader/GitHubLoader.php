@@ -262,10 +262,18 @@ EOD
                         if ($file['type'] == 'tree') {
                             $subDirectories[] = $fullFilename;
                         } else {
-                            if (!empty($file['content']['text'])) {
-                                if ($this->testFilter($fullFilename)) {
+                            if ($this->testFilter($fullFilename)) {
+                                if (!empty($file['content']['text'])) {
                                     $content = $file['content']['text'];
+                                } else {
+                                    $content = file_get_contents(sprintf('https://github.com/%s/%s/raw/%s/%s',
+                                                                         $this->getOption('owner'),
+                                                                         $this->getOption('repository'),
+                                                                         $version,
+                                                                         ltrim($fullFilename, '/')));
+                                }
 
+                                if (!is_null($content) && $content !== false) {
                                     // File
                                     $rawFile = new RawFile();
                                     $rawFile->setHash(sha1($content))
