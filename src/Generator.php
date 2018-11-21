@@ -467,31 +467,37 @@ class Generator
      */
     public static function resolveAbsolutePath(string $initialPath, string $path)
     {
-        if ((substr($path, 0, 1) == '/' && substr($path, 0, 2) !== '//') ||
-            substr($path, 0, 2) == './' ||
-            substr($path, 0, 3) == '../') {
-            // Unification of directories separators
-            $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
-            $finalPath = dirname($initialPath);
-            $finalPath = str_replace(DIRECTORY_SEPARATOR, '/', $finalPath);
+        // External link
+        if (preg_match('#^((\w+:)?//)#i', $path) > 0) {
+            return false;
+        }
 
-            // Concatenation
-            $finalPath = sprintf('%s/%s', rtrim($finalPath, '/'), ltrim($path, '/'));
+        // Complete absolute link
+        if (preg_match('#^(\.{1,2}/|/)#i', $path) == 0) {
+            $path = './' . $path;
+        }
 
-            // Replacement of '//'
-            $finalPath = preg_replace('#/{2,}#', '/', $finalPath);
+        // Unification of directories separators
+        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+        $finalPath = dirname($initialPath);
+        $finalPath = str_replace(DIRECTORY_SEPARATOR, '/', $finalPath);
 
-            // Replacement of './'
-            $finalPath = preg_replace('#/\./#', '/', $finalPath);
+        // Concatenation
+        $finalPath = sprintf('%s/%s', rtrim($finalPath, '/'), ltrim($path, '/'));
 
-            // Replacement of '../'
-            do {
-                $finalPath = preg_replace('#/([^\\/?%*:|"<>\.]+)/../#', '/', $finalPath, -1, $nbReplacements);
-            } while ($nbReplacements > 0);
+        // Replacement of '//'
+        $finalPath = preg_replace('#/{2,}#', '/', $finalPath);
 
-            if (strpos($finalPath, './') === false) {
-                return $finalPath;
-            }
+        // Replacement of './'
+        $finalPath = preg_replace('#/\./#', '/', $finalPath);
+
+        // Replacement of '../'
+        do {
+            $finalPath = preg_replace('#/([^\\/?%*:|"<>\.]+)/../#', '/', $finalPath, -1, $nbReplacements);
+        } while ($nbReplacements > 0);
+
+        if (strpos($finalPath, './') === false) {
+            return $finalPath;
         }
 
         return false;
