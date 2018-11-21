@@ -18,13 +18,14 @@ use Berlioz\DocParser\Exception\LoaderException;
 use Berlioz\DocParser\File\RawFile;
 use Berlioz\Http\Message\Request;
 use Berlioz\Http\Message\Uri;
-use Http\Client\HttpClient;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class GitLabLoader extends AbstractLoader implements LoaderInterface
 {
     const API_URL = 'https://api.github.com/graphql';
-    /** @var \Http\Client\HttpClient Http client */
+    /** @var \Psr\Http\Client\ClientInterface Http client */
     private $httpClient;
     /** @var array Versions */
     private $versions;
@@ -35,7 +36,7 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
      * GitLabLoader constructor.
      *
      * @param array                        $options    Options
-     * @param \Http\Client\HttpClient|null $httpClient HTTP client
+     * @param \Psr\Http\Client\ClientInterface|null $httpClient HTTP client
      *
      * @option string api        GitLab API link
      * @option string token      GitLab token
@@ -44,7 +45,7 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
      * @option string branch     Default branch if not versioned
      * @option string branches   Branches to get for versioned documentation (empty = all)
      */
-    public function __construct(array $options, HttpClient $httpClient)
+    public function __construct(array $options, ClientInterface $httpClient)
     {
         parent::__construct($options);
 
@@ -121,10 +122,10 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
     /**
      * Get http client.
      *
-     * @return \Http\Client\HttpClient
+     * @return \Psr\Http\Client\ClientInterface
      * @throws \Berlioz\DocParser\Exception\LoaderException
      */
-    private function getHttpClient(): HttpClient
+    private function getHttpClient(): ClientInterface
     {
         if (is_null($this->httpClient)) {
             throw new LoaderException(sprintf('Missing http client for loader "%s"', static::class));
@@ -152,7 +153,7 @@ class GitLabLoader extends AbstractLoader implements LoaderInterface
             $response = $this->getHttpClient()->sendRequest($request);
 
             return $response;
-        } catch (\Http\Client\Exception $e) {
+        } catch (ClientExceptionInterface $e) {
             throw new LoaderException('Unable to dialog with GitLab API', 0, $e);
         } catch (\Exception $e) {
             throw new LoaderException('Impossible to dialog with GitLab API', 0, $e);

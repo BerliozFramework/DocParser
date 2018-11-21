@@ -30,7 +30,7 @@
     "berlioz/http-message": "@dev",
     "erusev/parsedown-extra": "^0.7",
     "gregwar/rst": "^1.0",
-    "php-http/httplug": "^1.1",
+    "psr/http-client": "^1.0",
     "psr/simple-cache": "^1.0"
   },
   "require-dev": {
