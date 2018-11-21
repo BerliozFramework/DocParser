@@ -294,11 +294,15 @@ class Generator
             $href = $this->resolveAbsolutePath($page->getFilename(), $link->attr('href'));
 
             if ($href !== false) {
+                // Extract hash
+                $hash = strstr($href, '#') ?: '';
+                $href = strstr($href, '#', true) ?: $href;
+
                 if (is_null($pageLinked = $documentation->getFiles()->findByFilename($href))) {
                     throw new GeneratorException(sprintf('Link to "%s" broken in file "%s"', $link->attr('href'), $page->getFilename()));
                 }
 
-                $link->attr('href', $page->getRelativeUrlPathFor($pageLinked));
+                $link->attr('href', $page->getRelativeUrlPathFor($pageLinked) . ($hash ?: ''));
             }
 
             if ($href === false) {
