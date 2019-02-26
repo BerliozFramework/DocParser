@@ -476,6 +476,11 @@ class Generator
             return false;
         }
 
+        // Data?
+        if (preg_match('#^data:#i', $path) == 1) {
+            return false;
+        }
+
         // Complete absolute link
         if (preg_match('#^(\.{1,2}/|/)#i', $path) == 0) {
             $path = './' . $path;
