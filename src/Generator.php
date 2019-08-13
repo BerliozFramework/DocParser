@@ -291,6 +291,13 @@ class Generator
     {
         // Replacement of links
         foreach ($queryHtml->find('a[href]') as $link) {
+            $href = $link->attr('href');
+            $scheme = parse_url($href, PHP_URL_SCHEME);
+
+            if (!($scheme === null || in_array($scheme, ['http', 'https']))) {
+                continue;
+            }
+
             $href = $this->resolveAbsolutePath($page->getFilename(), $link->attr('href'));
 
             if ($href !== false) {
@@ -472,7 +479,7 @@ class Generator
     public static function resolveAbsolutePath(string $initialPath, string $path)
     {
         // External link
-        if (preg_match('#^((\w+:)?//)#i', $path) > 0) {
+        if (preg_match('#^(\w+:|//)#i', $path) > 0) {
             return false;
         }
 

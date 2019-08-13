@@ -17,29 +17,36 @@ namespace Berlioz\DocParser\Parser;
 use Berlioz\DocParser\Exception\ParserException;
 use Berlioz\DocParser\File\FileInterface;
 use Berlioz\DocParser\File\Page;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Environment;
+use League\CommonMark\Extras\CommonMarkExtrasExtension;
 
 class Markdown implements ParserInterface
 {
-    /** @var \ParsedownExtra Parser */
-    private $parsedownExtra;
+    /** @var \League\CommonMark\CommonMarkConverter Parser */
+    private $commonMarkConverter;
 
     /**
      * Get ParseDownExtra library.
      *
-     * @return \ParsedownExtra
+     * @return \League\CommonMark\CommonMarkConverter
      * @throws \Berlioz\DocParser\Exception\DocParserException
      */
-    protected function getParsedownExtra(): \ParsedownExtra
+    protected function getCommonMarkConverter(): CommonMarkConverter
     {
-        if (is_null($this->parsedownExtra)) {
+        if (is_null($this->commonMarkConverter)) {
             try {
-                $this->parsedownExtra = new \ParsedownExtra();
+                $environment = Environment::createCommonMarkEnvironment();
+                $environment->addExtension(new CommonMarkExtrasExtension());
+
+                $config = [];
+                $this->commonMarkConverter = new CommonMarkConverter($config, $environment);
             } catch (\Throwable $e) {
                 throw new ParserException('Error during initilization of Markdown parser', 0, $e);
             }
         }
 
-        return $this->parsedownExtra;
+        return $this->commonMarkConverter;
     }
 
     ////////////////////////
@@ -69,7 +76,7 @@ class Markdown implements ParserInterface
     {
         try {
             $page = new Page($srcFile);
-            $page->setParsedContent((string) $this->getParsedownExtra()->parse($page->getContent()))
+            $page->setParsedContent((string) $this->getCommonMarkConverter()->convertToHtml($page->getContent()))
                  ->setMime('text/html');
 
             return $page;
