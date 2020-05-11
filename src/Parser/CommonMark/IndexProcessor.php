@@ -29,15 +29,15 @@ class IndexProcessor
     }
 
     /**
-     * @param DocumentParsedEvent $e
+     * @param DocumentParsedEvent $event
      *
      * @return void
      */
-    public function __invoke(DocumentParsedEvent $e)
+    public function __invoke(DocumentParsedEvent $event)
     {
         $this->index = [];
 
-        $walker = $e->getDocument()->walker();
+        $walker = $event->getDocument()->walker();
         while ($event = $walker->next()) {
             if ($event->isEntering() && $event->getNode() instanceof FencedCode) {
                 /** @var FencedCode $code */
