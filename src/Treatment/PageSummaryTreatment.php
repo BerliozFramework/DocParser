@@ -59,19 +59,7 @@ class PageSummaryTreatment implements TreatmentInterface
         $entries = [];
         foreach ($headers as $header) {
             // Header level
-            $headerLevel = 1;
-            if ($header->is('h3')) {
-                $headerLevel = 2;
-            }
-            if ($header->is('h4')) {
-                $headerLevel = 3;
-            }
-            if ($header->is('h5')) {
-                $headerLevel = 4;
-            }
-            if ($header->is('h6')) {
-                $headerLevel = 5;
-            }
+            $headerLevel = $this->getHeaderLevel($header);
 
             // Remove old parent
             for ($i = count($entries) - 1; $i >= 0; $i--) {
@@ -109,18 +97,16 @@ class PageSummaryTreatment implements TreatmentInterface
             $entry->setId($id);
 
             // Add entry to summary hierarchy
-            {
-                if (($lastEntry = end($entries)) !== false) {
-                    /** @var Entry $lastEntry */
-                    $lastEntry = $lastEntry['entry'];
-                    $lastEntry->addEntry($entry);
-                }
+            if (($lastEntry = end($entries)) !== false) {
+                /** @var Entry $lastEntry */
+                $lastEntry = $lastEntry['entry'];
+                $lastEntry->addEntry($entry);
+            }
 
-                $entries[] = ['entry' => $entry, 'level' => $headerLevel];
+            $entries[] = ['entry' => $entry, 'level' => $headerLevel];
 
-                if (count($entries) <= 1) {
-                    $summary->addEntry($entry);
-                }
+            if (count($entries) <= 1) {
+                $summary->addEntry($entry);
             }
         }
 
@@ -142,5 +128,32 @@ class PageSummaryTreatment implements TreatmentInterface
         $id = trim(mb_strtolower($id), '-');
 
         return $id;
+    }
+
+    /**
+     * Get header level.
+     *
+     * @param Query $element
+     *
+     * @return int
+     * @throws QueryException
+     * @throws SelectorException
+     */
+    private function getHeaderLevel(Query $element): int
+    {
+        if ($element->is('h3')) {
+            return 2;
+        }
+        if ($element->is('h4')) {
+            return 3;
+        }
+        if ($element->is('h5')) {
+            return 4;
+        }
+        if ($element->is('h6')) {
+            return 5;
+        }
+
+        return 1;
     }
 }
