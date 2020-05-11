@@ -21,8 +21,19 @@ class RawFileTest extends TestCase
     private function getRawFile(): RawFile
     {
         return new RawFile(
-            fopen(__DIR__ . '\\..\\..\\_test\\index.md', 'r'),
-            '_test\\index.md',
+            fopen(
+                __DIR__ .
+                DIRECTORY_SEPARATOR .
+                '..' .
+                DIRECTORY_SEPARATOR .
+                '..' .
+                DIRECTORY_SEPARATOR .
+                '_test' .
+                DIRECTORY_SEPARATOR .
+                'index.md',
+                'r'
+            ),
+            '_test' . DIRECTORY_SEPARATOR . 'index.md',
             'text/markdown',
             new \DateTimeImmutable('2020-05-03 10:00:00')
         );
@@ -31,7 +42,7 @@ class RawFileTest extends TestCase
     public function testGetFilename()
     {
         $rawFile = $this->getRawFile();
-        $this->assertEquals('_test\\index.md', $rawFile->getFilename());
+        $this->assertEquals('_test' . DIRECTORY_SEPARATOR . 'index.md', $rawFile->getFilename());
     }
 
     public function testGetPath()
