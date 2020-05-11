@@ -12,13 +12,19 @@
 
 declare(strict_types=1);
 
-namespace Berlioz\DocParser\Exception;
+namespace Berlioz\DocParser\Parser\RST;
+
+use Gregwar\RST\Nodes\Node;
 
 /**
- * Class GeneratorException.
+ * Class IndexNode.
  *
- * @package Berlioz\DocParser\Exception
+ * @package Berlioz\DocParser\Parser\RST
  */
-class GeneratorException extends DocParserException
+class IndexNode extends Node
 {
+    public function render()
+    {
+        return null;
+    }
 }

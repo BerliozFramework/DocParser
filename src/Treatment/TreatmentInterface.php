@@ -12,13 +12,16 @@
 
 declare(strict_types=1);
 
-namespace Berlioz\DocParser\Exception;
+namespace Berlioz\DocParser\Treatment;
 
-/**
- * Class GeneratorException.
- *
- * @package Berlioz\DocParser\Exception
- */
-class GeneratorException extends DocParserException
+use Berlioz\DocParser\Doc\Documentation;
+
+interface TreatmentInterface
 {
+    /**
+     * Handle.
+     *
+     * @param Documentation $documentation
+     */
+    public function handle(Documentation $documentation): void;
 }

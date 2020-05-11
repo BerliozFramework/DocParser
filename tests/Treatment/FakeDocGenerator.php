@@ -10,15 +10,19 @@
  * file that was distributed with this source code, to the root.
  */
 
-declare(strict_types=1);
+namespace Berlioz\DocParser\Tests\Treatment;
 
-namespace Berlioz\DocParser\Exception;
+use Berlioz\DocParser\Doc\Documentation;
+use Berlioz\DocParser\DocGenerator;
 
-/**
- * Class GeneratorException.
- *
- * @package Berlioz\DocParser\Exception
- */
-class GeneratorException extends DocParserException
+class FakeDocGenerator extends DocGenerator
 {
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
+    }
+
+    protected function doTreatments(Documentation $documentation): void
+    {
+    }
 }

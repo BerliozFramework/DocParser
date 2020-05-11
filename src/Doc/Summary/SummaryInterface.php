@@ -12,13 +12,19 @@
 
 declare(strict_types=1);
 
-namespace Berlioz\DocParser\Exception;
+namespace Berlioz\DocParser\Doc\Summary;
 
 /**
- * Class GeneratorException.
+ * Interface SummaryInterface.
  *
- * @package Berlioz\DocParser\Exception
+ * @package Berlioz\DocParser\Doc\Summary
  */
-class GeneratorException extends DocParserException
+interface SummaryInterface
 {
+    /**
+     * Get entries.
+     *
+     * @return Entry[]
+     */
+    public function getEntries(): array;
 }

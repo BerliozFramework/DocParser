@@ -3,7 +3,7 @@
  * This file is part of Berlioz framework.
  *
  * @license   https://opensource.org/licenses/MIT MIT License
- * @copyright 2018 Ronan GIRON
+ * @copyright 2020 Ronan GIRON
  * @author    Ronan GIRON <https://github.com/ElGigi>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -14,41 +14,48 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Parser;
 
+use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Exception\ParserException;
-use Berlioz\DocParser\File\FileInterface;
-use Berlioz\DocParser\File\Page;
+use Berlioz\DocParser\Parser\RST\IndexDirective;
+use Berlioz\DocParser\Parser\RST\IndexNode;
+use Berlioz\Http\Message\Stream\MemoryStream;
+use DateTimeImmutable;
+use Exception;
+use Gregwar\RST\Environment;
+use Gregwar\RST\Kernel;
+use Gregwar\RST\Nodes\Node;
+use Gregwar\RST\Parser;
+use League\Flysystem\FileAttributes;
 
+/**
+ * Class reStructuredText.
+ *
+ * @package Berlioz\DocParser\Parser
+ */
 class reStructuredText implements ParserInterface
 {
-    /** @var \Gregwar\RST\Parser */
-    private $rstParser;
+    private Parser $rstParser;
 
     /**
-     * Get RST Parser.
+     * reStructuredText constructor.
      *
-     * @return \Gregwar\RST\Parser
+     * @param Environment|null $environment
+     * @param Kernel|null $kernel
      */
-    public function getRstParser(): \Gregwar\RST\Parser
+    public function __construct(?Environment $environment = null, ?Kernel $kernel = null)
     {
-        if (is_null($this->rstParser)) {
-            $this->rstParser = new \Gregwar\RST\Parser;
-        }
-
-        return $this->rstParser;
+        $this->rstParser = new Parser($environment, $kernel);
+        $this->rstParser->registerDirective(new IndexDirective());
     }
 
     /**
-     * Set RST Parser.
+     * Get RST parser.
      *
-     * @param \Gregwar\RST\Parser $rstParser
-     *
-     * @return \Berlioz\DocParser\Parser\reStructuredText
+     * @return Parser
      */
-    public function setRstParser(\Gregwar\RST\Parser $rstParser): reStructuredText
+    public function getRstParser(): Parser
     {
-        $this->rstParser = $rstParser;
-
-        return $this;
+        return $this->rstParser;
     }
 
     ////////////////////////
@@ -56,7 +63,7 @@ class reStructuredText implements ParserInterface
     ////////////////////////
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function acceptMime(string $mime): bool
     {
@@ -64,7 +71,7 @@ class reStructuredText implements ParserInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function acceptExtension(string $extension): bool
     {
@@ -72,20 +79,35 @@ class reStructuredText implements ParserInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function parse(FileInterface $srcFile): FileInterface
+    public function parse(string $src, FileAttributes $fileAttributes): Page
     {
         try {
-            $rstFile = $this->getRstParser()->parse($srcFile->getContent());
+            $rstFile = $this->rstParser->parse($src);
 
-            $page = new Page($srcFile);
-            $page->setTitle($rstFile->getTitle())
-                 ->setParsedContent((string) $rstFile->render())
-                 ->setMime('text/html');
+            $stream = new MemoryStream();
+            $stream->write((string)$rstFile->render());
+
+            $page =
+                new Page(
+                    $stream->detach(),
+                    $fileAttributes->path(),
+                    $fileAttributes->mimeType(),
+                    $fileAttributes->lastModified() ?
+                        (new DateTimeImmutable())->setTimestamp($fileAttributes->lastModified()) : null
+                );
+            $page->setTitle($rstFile->getTitle());
+
+            // Get metas from parser
+            $metas = [];
+            foreach ($rstFile->getNodes(fn(Node $node) => $node instanceof IndexNode) as $indexNode) {
+                $metas = array_replace($metas, $indexNode->getValue());
+            }
+            $page->setMetas($metas);
 
             return $page;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ParserException('An error occurred during parsing of content', 0, $e);
         }
     }

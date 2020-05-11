@@ -3,7 +3,7 @@
  * This file is part of Berlioz framework.
  *
  * @license   https://opensource.org/licenses/MIT MIT License
- * @copyright 2018 Ronan GIRON
+ * @copyright 2020 Ronan GIRON
  * @author    Ronan GIRON <https://github.com/ElGigi>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -14,6 +14,13 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Exception;
 
-class DocParserException extends \Exception
+use Exception;
+
+/**
+ * Class DocParserException.
+ *
+ * @package Berlioz\DocParser\Exception
+ */
+class DocParserException extends Exception
 {
 }

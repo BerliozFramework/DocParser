@@ -3,7 +3,7 @@
  * This file is part of Berlioz framework.
  *
  * @license   https://opensource.org/licenses/MIT MIT License
- * @copyright 2018 Ronan GIRON
+ * @copyright 2020 Ronan GIRON
  * @author    Ronan GIRON <https://github.com/ElGigi>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -14,8 +14,15 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Parser;
 
-use Berlioz\DocParser\File\FileInterface;
+use Berlioz\DocParser\Doc\File\FileInterface;
+use Berlioz\DocParser\Exception\ParserException;
+use League\Flysystem\FileAttributes;
 
+/**
+ * Interface ParserInterface.
+ *
+ * @package Berlioz\DocParser\Parser
+ */
 interface ParserInterface
 {
     /**
@@ -28,7 +35,7 @@ interface ParserInterface
     public function acceptMime(string $mime): bool;
 
     /**
-     * Accept extension?
+     * Accept file extension?
      *
      * @param string $extension
      *
@@ -39,10 +46,11 @@ interface ParserInterface
     /**
      * Parse content.
      *
-     * @param \Berlioz\DocParser\File\FileInterface $srcFile Source file
+     * @param string $src Source
+     * @param FileAttributes $fileAttributes
      *
-     * @return \Berlioz\DocParser\File\FileInterface
-     * @throws \Berlioz\DocParser\Exception\ParserException if an error occurred during parsing
+     * @return FileInterface
+     * @throws ParserException
      */
-    public function parse(FileInterface $srcFile): FileInterface;
+    public function parse(string $src, FileAttributes $fileAttributes): FileInterface;
 }
