@@ -22,8 +22,8 @@ class PageTest extends TestCase
     private function getPage(): Page
     {
         return new Page(
-            fopen(__DIR__ . '\\..\\..\\_test\\index.md', 'r'),
-            '_test\\index.md',
+            fopen(__DIR__ . '/../../_test/index.md', 'r'),
+            '_test/index.md',
             'text/markdown',
             new \DateTimeImmutable('2020-05-03 10:00:00')
         );
