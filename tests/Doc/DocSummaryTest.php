@@ -34,8 +34,8 @@ class DocSummaryTest extends TestCase
         // No breadcrumb
         $this->assertCount(0, $docSummary);
 
-        $page->setMetas(['breadcrumb' => 'My; Breadcrumb']);
-        $page2->setMetas(['breadcrumb' => 'My']);
+        $page->setMetas(['breadcrumb' => 'My; Beautiful; Breadcrumb', 'summary-order' => '2; 1']);
+        $page2->setMetas(['breadcrumb' => 'My; Beautiful', 'summary-order' => '3']);
         $docSummary->addPage($page);
         $docSummary->addPage($page2);
 
@@ -43,11 +43,16 @@ class DocSummaryTest extends TestCase
         $this->equalTo(2, $docSummary->countRecursive());
 
         $entries = $docSummary->getEntries();
+        $this->assertEquals(3, $docSummary->countRecursive());
         $firstEntry = reset($entries);
-        $subEntries = $firstEntry->getEntries();
-        $subEntry = reset($subEntries);
+        $pageEntry = $docSummary->findByPage($page);
+        $page2Entry = $docSummary->findByPage($page2);
         $this->assertEquals('My', $firstEntry->getTitle());
-        $this->assertEquals('Breadcrumb', $subEntry->getTitle());
+        $this->assertNull($firstEntry->getOrder());
+        $this->assertEquals('Breadcrumb', $pageEntry->getTitle());
+        $this->assertEquals(1, $pageEntry->getOrder());
+        $this->assertEquals('Beautiful', $page2Entry->getTitle());
+        $this->assertEquals(3, $page2Entry->getOrder());
     }
 
     public function testFindByPage()

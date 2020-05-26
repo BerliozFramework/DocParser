@@ -56,6 +56,14 @@ class DocSummary extends PageSummary
         $nbEntries = count($breadcrumb);
         $parentEntry = $this;
 
+        // Summary order
+        $summaryOrder = $page->getMeta('summary-order', '');
+        $summaryOrder = explode(';', $summaryOrder);
+        array_walk($summaryOrder, fn(&$value) => $value = (int)trim($value));
+        array_walk($summaryOrder, fn(&$value) => $value = empty($value) ? null : $value);
+        $summaryOrder = array_pad($summaryOrder, 0 - $nbEntries, null);
+        $summaryOrder = array_slice($summaryOrder, 0, $nbEntries);
+
         for ($i = 0; $i < $nbEntries; $i++) {
             $entry = $parentEntry->getEntryByTitle($breadcrumb[$i]);
 
@@ -67,11 +75,6 @@ class DocSummary extends PageSummary
 
             // Define url and order if it's last element
             if ($i + 1 == $nbEntries) {
-                $summaryOrder = $page->getMeta('summary-order');
-                if (!empty($summaryOrder)) {
-                    $summaryOrder = (int)$summaryOrder;
-                }
-
                 $entryVisible =
                     (bool)(
                         filter_var(
@@ -83,8 +86,11 @@ class DocSummary extends PageSummary
 
                 $entry
                     ->setPath($page->getPath())
-                    ->setOrder($summaryOrder ?: null)
                     ->setVisible($entryVisible, $entryVisible);
+            }
+
+            if (isset($summaryOrder[$i])) {
+                $entry->setOrder($summaryOrder[$i]);
             }
 
             $parentEntry = $entry;
@@ -124,6 +130,7 @@ class DocSummary extends PageSummary
      * Get page breadcrumb.
      *
      * @param Page $page
+     *
      * @return array|null
      */
     private function getPageBreadcrumb(Page $page): ?array
