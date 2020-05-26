@@ -24,8 +24,8 @@ vulnera caecoque feremus et uncos; qui sinamus, fronte sitim procurrunt.
 
 Recepit nec digitis ora, vetabant ne quem, enim ministros effugies Aloidas
 increscere metas at adeant nomenque luminis hunc. Caeruleis quique mihi *fata
-excipit*, capit tumidus veteres nocte? Tum sorte in in Astreus pectora nec
-Phoebo nostro cum cum.
+excipit*, capit tumidus [veteres](https://getberlioz.com) nocte? Tum sorte in
+in Astreus pectora nec Phoebo nostro cum cum.
 
 | TH    | TH    |
 |-------|-------|
