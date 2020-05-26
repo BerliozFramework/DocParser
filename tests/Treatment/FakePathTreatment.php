@@ -12,8 +12,9 @@
 
 namespace Berlioz\DocParser\Tests\Treatment;
 
-use Berlioz\DocParser\Treatment\AbstractPathTreatment;
+use Berlioz\DocParser\Treatment\PathTreatmentTrait;
 
-class FakePathTreatment extends AbstractPathTreatment
+class FakePathTreatment
 {
+    use PathTreatmentTrait;
 }

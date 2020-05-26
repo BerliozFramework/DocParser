@@ -14,7 +14,7 @@ namespace Berlioz\DocParser\Tests\Treatment;
 
 use PHPUnit\Framework\TestCase;
 
-class AbstractPathTreatmentTest extends TestCase
+class PathTreatmentTraitTest extends TestCase
 {
     public function absolutePathProvider()
     {
@@ -28,6 +28,7 @@ class AbstractPathTreatmentTest extends TestCase
             ['foo/bar/index.md', './baz.md', 'foo/bar/baz.md'],
             ['foo/bar/index.md', '../baz.md', 'foo/baz.md'],
             ['foo/bar/index.md', '../../qux.md', 'qux.md'],
+            ['foo/bar/index', '../../qux/quux.foo', 'qux/quux.foo'],
             ['foo/bar/index.md', '../../../qux.md', null],
         ];
     }
@@ -56,6 +57,8 @@ class AbstractPathTreatmentTest extends TestCase
             ['index.md', 'quux.md', './quux.md'],
             ['foo/index.md', '/foo/baz.md', './baz.md'],
             ['./foo/bar/index.md', '/baz.md', '../../baz.md'],
+            ['/foo/bar/index.md', '/qux/baz.md', '../../qux/baz.md'],
+            ['/foo/bar/quux/index.md', '/foo/qux/corge/baz.md', '../../qux/corge/baz.md'],
             ['./foo/index.md', './bar/baz.md', './bar/baz.md'],
             ['foo/index.md', '/bar/baz.md', '../bar/baz.md'],
             ['./foo/index.md', '../bar/baz.md', '../bar/baz.md'],

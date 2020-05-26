@@ -21,8 +21,10 @@ use Berlioz\HtmlSelector\Exception\QueryException;
 use Berlioz\HtmlSelector\Exception\SelectorException;
 use Berlioz\HtmlSelector\Query;
 
-class PathTreatment extends AbstractPathTreatment implements TreatmentInterface
+class PathTreatment implements TreatmentInterface
 {
+    use PathTreatmentTrait;
+
     /**
      * @inheritDoc
      * @throws QueryException
@@ -63,16 +65,16 @@ class PathTreatment extends AbstractPathTreatment implements TreatmentInterface
             return $path;
         }
 
-        $linkedPage =
+        $linkedFile =
             $documentation
                 ->getFiles()
                 ->findByFilename($absolutePath);
 
-        if (null === $linkedPage) {
+        if (null === $linkedFile) {
             return $this->resolveRelativePath('/' . $page->getPath(), '/' . $absolutePath);
         }
 
-        return $this->resolveRelativePath('/' . $page->getPath(), '/' . $linkedPage->getPath());
+        return $this->resolveRelativePath('/' . $page->getPath(), '/' . $linkedFile->getPath());
     }
 
     /**

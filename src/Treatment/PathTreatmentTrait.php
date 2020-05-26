@@ -16,7 +16,7 @@ namespace Berlioz\DocParser\Treatment;
 
 use InvalidArgumentException;
 
-abstract class AbstractPathTreatment
+trait PathTreatmentTrait
 {
     /**
      * Resolve absolute path.
@@ -100,7 +100,7 @@ abstract class AbstractPathTreatment
         $differentDepthPath = 0;
 
         for ($i = 0; $i < $srcDepth; $i++) {
-            if (!isset($dstPath[$i]) || $srcPath[$i] !== $dstPath[$i]) {
+            if (!isset($dstPath[$i]) || $srcPath[$i] !== $dstPath[$i] || $differentDepthPath > 0) {
                 $differentDepthPath++;
             }
         }
@@ -108,7 +108,7 @@ abstract class AbstractPathTreatment
         $relativePath = '';
         if ($differentDepthPath > 0) {
             $relativePath .= str_repeat('../', $differentDepthPath);
-            $relativePath .= implode('/', (array)array_slice($dstPath, $differentDepthPath - 1, $dstDepth));
+            $relativePath .= implode('/', (array)array_slice($dstPath, min($dstDepth, $differentDepthPath) - 1));
         }
         if ($differentDepthPath === 0) {
             $relativePath .= './';
