@@ -52,7 +52,16 @@ trait EntryIterable
      */
     public function countRecursive(): int
     {
-        return $this->count() + array_sum(array_map('count', $this->entries));
+        $count = 0;
+        foreach ($this as $entry) {
+            $count++;
+
+            if ($entry instanceof EntryIterableInterface) {
+                $count += $entry->countRecursive();
+            }
+        }
+
+        return $count;
     }
 
     /**

@@ -37,4 +37,11 @@ interface EntryIterableInterface extends Countable, IteratorAggregate
      * @param array $data
      */
     public function __unserialize(array $data): void;
+
+    /**
+     * Count recursive entries.
+     *
+     * @return int
+     */
+    public function countRecursive(): int;
 }
