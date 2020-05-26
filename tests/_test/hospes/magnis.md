@@ -52,6 +52,8 @@ parum; [arva](usum/usum.md)!
 
 ## Errorem talia it ignem erat dum Erasinus
 
+![Magnis image](../assets/magnis.jpg)
+
 Propulsa sors torusque, plectrumque Cocalus *harena deorum* fuit adhuc nullam
 voce equi Aeneae: mandat fuso. Caput aris: me labores inque; persequar Teucras
 loqui non velocia volant praestantia matrona clam iecit **vocatum**. Illi que
@@ -66,4 +68,4 @@ Amplexas cadunt lustra artes; genu quoque, fuit iubet femina [Caystros
 liquescunt vultus](http://www.atque-quae.net/velacana.html) nodosaque. Nimiumque
 proles, o et me totiens? Hominemque moriens cunctas sacra partem fulgure
 spectatorem opus facis formas, tum potest nati erudit iuppiter aquarum. Nisi
-vocem primum, et et orientis vera haeserat certa nefas certa.
+vocem primum, et et orientis vera haeserat certa nefas [certa](./usum.md).
