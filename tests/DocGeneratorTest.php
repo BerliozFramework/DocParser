@@ -31,8 +31,7 @@ class DocGeneratorTest extends TestCase
         $documentation = $generator->handle($docVersion = 'current', $filesystem);
 
         $this->assertEquals($docVersion, $documentation->getVersion());
-        $this->assertCount(10, $documentation->getFiles());
-        $this->assertCount(10, $documentation->getFiles());
+        $this->assertCount(11, $documentation->getFiles());
         $this->assertEquals(3, $documentation->getSummary()->countRecursive());
         $this->assertNull($documentation->handle('imago.md'));
         $this->assertNotNull($page = $documentation->handle('images'));

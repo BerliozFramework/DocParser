@@ -64,7 +64,7 @@ class DocumentationTest extends TestCase
         $doc = $this->getFakeDocumentation();
 
         $this->assertInstanceOf(FileSet::class, $doc->getFiles());
-        $this->assertCount(10, $doc->getFiles());
+        $this->assertCount(11, $doc->getFiles());
 
         foreach ($doc->getFiles() as $file) {
             $this->assertInstanceOf(FileInterface::class, $file);
