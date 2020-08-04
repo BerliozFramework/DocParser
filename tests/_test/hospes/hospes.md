@@ -1,5 +1,6 @@
 ```index
 breadcrumb: Hospes
+slug: hôspés
 ```
 
 # Haec hospes si carent durastis
