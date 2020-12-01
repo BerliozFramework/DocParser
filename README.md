@@ -6,7 +6,7 @@
 [![Quality Grade](https://img.shields.io/codacy/grade/b52d4c86c2084349855d3ad24f2f8b7c/master.svg?style=flat-square)](https://www.codacy.com/manual/BerliozFramework/DocParser)
 [![Total Downloads](https://img.shields.io/packagist/dt/berlioz/doc-parser.svg?style=flat-square)](https://packagist.org/packages/berlioz/doc-parser)
 
-**Berlioz DocParser** is a PHP library to parse documentation and allow to integrate this on website for example.
+**Berlioz Doc Parser** is a PHP library to parse documentation and allow to integrate this on website for example.
 
 ## Installation
 
