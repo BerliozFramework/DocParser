@@ -6,6 +6,8 @@
 [![Quality Grade](https://img.shields.io/codacy/grade/b52d4c86c2084349855d3ad24f2f8b7c/master.svg?style=flat-square)](https://www.codacy.com/manual/BerliozFramework/DocParser)
 [![Total Downloads](https://img.shields.io/packagist/dt/berlioz/doc-parser.svg?style=flat-square)](https://packagist.org/packages/berlioz/doc-parser)
 
+**Berlioz DocParser** is a PHP library to parse documentation and allow to integrate this on website for example.
+
 ## Installation
 
 ### Composer
@@ -52,7 +54,7 @@ $docGenerator = new DocGenerator(new Markdown());
 $documentation =
     $docGenerator->handle(
         $version,
-        new Filesystem(new LocalFilesystemAdapter('/.../doc'))
+        new Filesystem(new LocalFilesystemAdapter('/path-of-project/doc'))
     );
 ```
 
@@ -211,7 +213,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 $version = '1.0';
-$cacheFilesystem = new Filesystem(new LocalFilesystemAdapter('/.../cache'));
+$cacheFilesystem = new Filesystem(new LocalFilesystemAdapter('/path-of-project/cache'));
 $docCacheGenerator = new DocCacheGenerator($cacheFilesystem);
 
 if (null === ($documentation = $docCacheGenerator->get($version))) {
@@ -219,7 +221,7 @@ if (null === ($documentation = $docCacheGenerator->get($version))) {
     $documentation =
         $docGenerator->handle(
             $version,
-            new Filesystem(new LocalFilesystemAdapter('/.../doc'))
+            new Filesystem(new LocalFilesystemAdapter('/path-of-project/doc'))
         );
 
     $docCacheGenerator->save($documentation);
