@@ -14,12 +14,15 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Parser\CommonMark;
 
+use Berlioz\DocParser\Parser\TraitCastValue;
 use League\CommonMark\Block\Element\FencedCode;
 use League\CommonMark\EnvironmentInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
 
 class IndexProcessor
 {
+    use TraitCastValue;
+
     private EnvironmentInterface $environment;
     private array $index = [];
 
@@ -56,7 +59,7 @@ class IndexProcessor
                 array_walk($metas, fn(&$value) => $value = explode(':', $value, 2));
                 array_walk($metas, fn(&$value) => $value = array_pad($value, 2, ''));
                 array_walk($metas, fn(&$value) => $value[0] = mb_strtolower($value[0]));
-                array_walk_recursive($metas, fn(&$value) => $value = trim($value));
+                array_walk_recursive($metas, fn(&$value) => $value = $this->castValue($value));
 
                 $this->index = array_replace($this->index, array_column($metas, 1, 0));
             }

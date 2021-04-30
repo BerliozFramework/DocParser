@@ -40,7 +40,6 @@ class DocSummaryTest extends TestCase
         $docSummary->addPage($page2);
 
         $this->assertCount(1, $docSummary);
-        $this->equalTo(2, $docSummary->countRecursive());
 
         $entries = $docSummary->getEntries();
         $this->assertEquals(3, $docSummary->countRecursive());
@@ -53,6 +52,28 @@ class DocSummaryTest extends TestCase
         $this->assertEquals(1, $pageEntry->getOrder());
         $this->assertEquals('Beautiful', $page2Entry->getTitle());
         $this->assertEquals(3, $page2Entry->getOrder());
+    }
+
+    public function testAddPageNotVisible()
+    {
+        $page = new Page(fopen('php://memory', 'r'), 'test.md');
+        fwrite($page->getStream(), <<<EOF
+```index
+title: Title of page
+slug: Slug name (replace only the filename, not path)
+breadcrumb: Category; Sub category; My page
+summary-order: 1
+summary-visible: true
+```
+
+# Title of page
+EOF
+);
+
+        $docSummary = new DocSummary();
+        $docSummary->addPage($page);
+
+        $this->assertCount(0, $docSummary->getEntries());
     }
 
     public function testFindByPage()

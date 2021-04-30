@@ -61,6 +61,7 @@ Content
 ```index
 title: Page title
 slug: page
+summary-visible: false
 ```
 EOF,
             $fileAttributes
@@ -77,5 +78,6 @@ EOF,
             '<p>Content</p>' . "\n",
             $page->getContents()
         );
+        $this->assertFalse($page->getMeta('summary-visible'));
     }
 }

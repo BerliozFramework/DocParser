@@ -34,6 +34,8 @@ use League\Flysystem\FileAttributes;
  */
 class reStructuredText implements ParserInterface
 {
+    use TraitCastValue;
+
     private Parser $rstParser;
 
     /**
@@ -104,6 +106,7 @@ class reStructuredText implements ParserInterface
             foreach ($rstFile->getNodes(fn(Node $node) => $node instanceof IndexNode) as $indexNode) {
                 $metas = array_replace($metas, $indexNode->getValue());
             }
+            array_walk_recursive($metas, fn(&$value) => $value = $this->castValue($value));
             $page->setMetas($metas);
 
             return $page;
