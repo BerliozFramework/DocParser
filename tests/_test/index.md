@@ -53,4 +53,6 @@ caput. Est quod ego, nam inquit iamque ore Pergama lacus: tale.
 title: Website title
 slug: index
 breadcrumb: Website
+summary-order: 1
+summary-visible: true
 ```

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a Changelog](http://keepachangelog.com/).
 
+## [v1.1.1] - 2021-04-30
+
+### Fixed
+
+- Cast order of summary to string to allow nested orders
+
 ## [v1.1.0] - 2021-04-30
 
 ### Changed

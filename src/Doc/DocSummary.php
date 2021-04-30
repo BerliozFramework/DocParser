@@ -58,7 +58,7 @@ class DocSummary extends PageSummary
 
         // Summary order
         $summaryOrder = $page->getMeta('summary-order', '');
-        $summaryOrder = explode(';', $summaryOrder);
+        $summaryOrder = explode(';', (string)$summaryOrder);
         array_walk($summaryOrder, fn(&$value) => $value = (int)trim($value));
         array_walk($summaryOrder, fn(&$value) => $value = empty($value) ? null : $value);
         $summaryOrder = array_pad($summaryOrder, 0 - $nbEntries, null);
@@ -75,15 +75,7 @@ class DocSummary extends PageSummary
 
             // Define url and order if it's last element
             if ($i + 1 == $nbEntries) {
-                $entryVisible =
-                    (bool)(
-                        filter_var(
-                            $page->getMeta('summary-visible', true),
-                            FILTER_VALIDATE_BOOLEAN,
-                            FILTER_NULL_ON_FAILURE
-                        ) ?? false
-                    );
-
+                $entryVisible = (bool)$page->getMeta('summary-visible', true);
                 $entry
                     ->setPath($page->getPath())
                     ->setVisible($entryVisible, $entryVisible);
