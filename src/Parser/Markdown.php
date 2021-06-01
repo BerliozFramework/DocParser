@@ -20,10 +20,10 @@ use Berlioz\DocParser\Parser\CommonMark\IndexExtension;
 use Berlioz\Http\Message\Stream\MemoryStream;
 use DateTimeImmutable;
 use Exception;
-use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\ConfigurableEnvironmentInterface;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
+use League\CommonMark\MarkdownConverter;
 use League\Flysystem\FileAttributes;
 
 /**
@@ -33,7 +33,7 @@ use League\Flysystem\FileAttributes;
  */
 class Markdown implements ParserInterface
 {
-    private CommonMarkConverter $commonMarkConverter;
+    private MarkdownConverter $markdownConverter;
     private IndexExtension $indexExtension;
 
     /**
@@ -50,19 +50,20 @@ class Markdown implements ParserInterface
         }
 
         // Add default index extension
+        $environment->mergeConfig($config);
         $environment->addExtension($this->indexExtension = new IndexExtension());
 
-        $this->commonMarkConverter = new CommonMarkConverter($config, $environment);
+        $this->markdownConverter = new MarkdownConverter($environment);
     }
 
     /**
      * Get CommonMark converter.
      *
-     * @return CommonMarkConverter
+     * @return MarkdownConverter
      */
-    public function getCommonMarkConverter(): CommonMarkConverter
+    public function getMarkdownConverter(): MarkdownConverter
     {
-        return $this->commonMarkConverter;
+        return $this->markdownConverter;
     }
 
     ////////////////////////
@@ -92,7 +93,7 @@ class Markdown implements ParserInterface
     {
         try {
             $stream = new MemoryStream();
-            $stream->write((string)$this->commonMarkConverter->convertToHtml($src));
+            $stream->write($this->markdownConverter->convertToHtml($src));
 
             $page =
                 new Page(

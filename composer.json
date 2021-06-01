@@ -3,6 +3,8 @@
   "description": "Berlioz Doc Parser is a PHP library to parse documentation and allow to integrate this on website for example.",
   "license": "MIT",
   "homepage": "https://getberlioz.com",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "authors": [
     {
       "name": "Ronan Giron",
@@ -23,7 +25,7 @@
     "php": "^7.4 || ^8.0",
     "ext-mbstring": "*",
     "berlioz/html-selector": "^1.0",
-    "berlioz/http-message": "^1.1",
+    "berlioz/http-message": "^1.0 || 2.x-dev",
     "league/flysystem": "^2.0"
   },
   "require-dev": {
