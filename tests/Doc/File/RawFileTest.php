@@ -35,7 +35,7 @@ class RawFileTest extends TestCase
             ),
             '_test' . DIRECTORY_SEPARATOR . 'index.md',
             'text/markdown',
-            new \DateTimeImmutable('2020-05-03 10:00:00')
+            new \DateTimeImmutable('2020-05-03T10:00:00+00:00')
         );
     }
 
