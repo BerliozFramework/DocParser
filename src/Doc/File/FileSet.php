@@ -65,7 +65,7 @@ class FileSet implements IteratorAggregate, Countable
     /**
      * Implementation of \IteratorAggregate interface.
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->files);
     }
@@ -79,7 +79,7 @@ class FileSet implements IteratorAggregate, Countable
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->files);
     }
