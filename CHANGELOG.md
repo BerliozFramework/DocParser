@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a Changelog](http://keepachangelog.com/).
 
+## [v1.3.0] - 2021-09-02
+
+### Changed
+
+- Signature of `EntryIterable::getIterator(): ArrayIterator` for PHP 8.1
+- Signature of `FileSet::getIterator(): ArrayIterator` for PHP 8.1
+- Signature of `FileSet::count(): int` for PHP 8.1
+
+### Fixed
+
+- Tests with date time zone
+
 ## [v1.2.1] - 2021-06-08
 
 ### Changed
