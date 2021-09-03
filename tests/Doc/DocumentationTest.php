@@ -17,6 +17,7 @@ use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\FileSet;
 use Berlioz\DocParser\Tests\TraitFakeDocumentation;
+use Berlioz\HtmlSelector\HtmlSelector;
 use PHPUnit\Framework\TestCase;
 
 class DocumentationTest extends TestCase
@@ -69,5 +70,17 @@ class DocumentationTest extends TestCase
         foreach ($doc->getFiles() as $file) {
             $this->assertInstanceOf(FileInterface::class, $file);
         }
+    }
+
+    public function testPathWithAnchor()
+    {
+        $doc = $this->getFakeDocumentation();
+        $page = $doc->handle('/hospes/magnis');
+
+        $this->assertNotNull($page);
+
+        $query = (new HtmlSelector())->query($page->getContents())->find('a:contains(currere contemptrix)');
+        $this->assertCount(1, $query);
+        $this->assertEquals('../index#o-infecta-ossibus-ripa', $query->attr('href'));
     }
 }

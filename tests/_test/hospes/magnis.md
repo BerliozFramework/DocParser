@@ -9,7 +9,7 @@ Vero albis, taedasque diu copia summoque longa iungitur ut.
 
 **Visa animo moles**; ait cumque Aurora mittit, coniunxque Dianae. Obductos
 accinctus silvae Tirynthius se arvum animum praelate suis nec vidit mihi
-**gelido**, tibi facies. In [currere contemptrix](../index.md)
+**gelido**, tibi facies. In [currere contemptrix](../index.md#o-infecta-ossibus-ripa)
 certe resolvit valles Helicen in periclis referam ternisque dicebat positus
 animal vices.
 

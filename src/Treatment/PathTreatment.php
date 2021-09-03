@@ -75,11 +75,15 @@ class PathTreatment implements TreatmentInterface
                 ->getFiles()
                 ->findByFilename($absolutePath);
 
-        if (null === $linkedFile) {
-            return $this->resolveRelativePath('/' . $page->getPath(), '/' . $absolutePath);
+        if (null !== $linkedFile) {
+            $anchor = null;
+            if (str_contains($absolutePath, '#')) {
+                $anchor = '#' . explode('#', $absolutePath, 2)[1];
+            }
+            $absolutePath = $linkedFile->getPath() . ($anchor ?? '');
         }
 
-        return $this->resolveRelativePath('/' . $page->getPath(), '/' . $linkedFile->getPath());
+        return $this->resolveRelativePath('/' . $page->getPath(), '/' . $absolutePath);
     }
 
     /**
@@ -106,6 +110,11 @@ class PathTreatment implements TreatmentInterface
             return $path;
         }
 
-        return $this->resolveAbsolutePath($file->getFilename(), $url['path']);
+        $path = $url['path'];
+        if (isset($url['fragment'])) {
+            $path .= '#' . $url['fragment'];
+        }
+
+        return $this->resolveAbsolutePath($file->getFilename(), $path);
     }
 }

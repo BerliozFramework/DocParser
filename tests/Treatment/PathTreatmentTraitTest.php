@@ -31,6 +31,7 @@ class PathTreatmentTraitTest extends TestCase
             ['foo/bar/index.md', '../../qux.md', 'qux.md'],
             ['foo/bar/index', '../../qux/quux.foo', 'qux/quux.foo'],
             ['foo/bar/index.md', '../../../qux.md', null],
+            ['foo/bar/index', '../../qux/quux.foo#anchor', 'qux/quux.foo#anchor'],
         ];
     }
 
@@ -68,6 +69,7 @@ class PathTreatmentTraitTest extends TestCase
             ['foo/index.md', '/bar/baz.md', '../bar/baz.md'],
             ['./foo/index.md', '../bar/baz.md', '../bar/baz.md'],
             ['./foo/index.md', '../foo/baz.md', './baz.md'],
+            ['./foo/index.md', '../foo/baz.md#anchor', './baz.md#anchor'],
         ];
     }
 

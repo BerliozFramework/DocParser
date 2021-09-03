@@ -49,7 +49,7 @@ humano satis dies opem.
 
 ## Hunc nymphae prosiluit arvis quoque inmenso at
 
-Comas fatalia sub, [moenia iuventae](./hospes/hospes.md) manifesta iniusti
+Comas fatalia sub, [moenia iuventae](hospes/hospes.md) manifesta iniusti
 huic Quirine. Praemia foedo laboras; Silenus, te nullo exigit manifesta
 stridula.
 

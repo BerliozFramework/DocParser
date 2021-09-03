@@ -190,6 +190,12 @@ class FileSet implements IteratorAggregate, Countable
      */
     private function normalizePath(string $path): string
     {
-        return ltrim(str_replace('\\', '/', $path), '/');
+        $path = ltrim(str_replace('\\', '/', $path), '/');
+
+        if (str_contains($path, '#')) {
+            return explode('#', $path, 2)[0];
+        }
+
+        return $path;
     }
 }
