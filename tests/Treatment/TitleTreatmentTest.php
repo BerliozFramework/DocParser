@@ -14,6 +14,7 @@ namespace Berlioz\DocParser\Tests\Treatment;
 
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Treatment\TitleTreatment;
+use Berlioz\HtmlSelector\HtmlSelector;
 use Berlioz\HtmlSelector\Query;
 
 class TitleTreatmentTest extends AbstractTestCase
@@ -29,7 +30,7 @@ class TitleTreatmentTest extends AbstractTestCase
         $titleTreatment->doTitleTreatment($page);
 
         $this->assertEquals('Tamen vertice audet tum', $page->getTitle());
-        $this->assertCount(1, Query::loadHtml($page->getContents())->find('h1'));
+        $this->assertCount(1, (new HtmlSelector())->query($page->getContents())->find('h1'));
 
         /** @var Page $page */
         $page = $documentation->getFiles()->findByPath('images');
@@ -37,7 +38,7 @@ class TitleTreatmentTest extends AbstractTestCase
         $titleTreatment->doTitleTreatment($page);
 
         $this->assertEquals('Title of page', $page->getTitle());
-        $this->assertCount(1, Query::loadHtml($page->getContents())->find('h1'));
+        $this->assertCount(1, (new HtmlSelector())->query($page->getContents())->find('h1'));
 
         /// Remove H1 option
 
@@ -49,6 +50,6 @@ class TitleTreatmentTest extends AbstractTestCase
         $titleTreatment->doTitleTreatment($page);
 
         $this->assertEquals('In dea mali modo Priamus corpore', $page->getTitle());
-        $this->assertCount(0, Query::loadHtml($page->getContents())->find('h1'));
+        $this->assertCount(0, (new HtmlSelector())->query($page->getContents())->find('h1'));
     }
 }

@@ -20,23 +20,15 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
 use Throwable;
 
-/**
- * Class DocCacheGenerator.
- *
- * @package Berlioz\DocParser
- */
 class DocCacheGenerator
 {
-    protected Filesystem $filesystem;
-
     /**
      * DocCacheGenerator constructor.
      *
      * @param Filesystem $filesystem
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(protected Filesystem $filesystem)
     {
-        $this->filesystem = $filesystem;
     }
 
     /**
@@ -106,7 +98,7 @@ class DocCacheGenerator
             }
 
             return $documentation;
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
     }
@@ -118,7 +110,7 @@ class DocCacheGenerator
      *
      * @throws FilesystemException
      */
-    public function save(Documentation $documentation)
+    public function save(Documentation $documentation): void
     {
         /** @var FileInterface $file */
         foreach ($documentation->getFiles() as $file) {
@@ -139,7 +131,7 @@ class DocCacheGenerator
      *
      * @throws FilesystemException
      */
-    public function readFile(FileInterface $file)
+    public function readFile(FileInterface $file): void
     {
         $file->setStream($this->filesystem->readStream($this->getFileCacheName($file)));
     }
@@ -151,7 +143,7 @@ class DocCacheGenerator
      *
      * @throws FilesystemException
      */
-    public function saveFile(FileInterface $file)
+    public function saveFile(FileInterface $file): void
     {
         $this->filesystem->writeStream($this->getFileCacheName($file), $file->getStream());
     }

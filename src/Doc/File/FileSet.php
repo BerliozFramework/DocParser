@@ -18,11 +18,6 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 
-/**
- * Class FileSet.
- *
- * @package Berlioz\DocParser\File
- */
 class FileSet implements IteratorAggregate, Countable
 {
     /** @var FileInterface[] Files */
@@ -33,7 +28,7 @@ class FileSet implements IteratorAggregate, Countable
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return ['files' => $this->files];
     }
@@ -95,7 +90,7 @@ class FileSet implements IteratorAggregate, Countable
      *
      * @return static
      */
-    public function addFile(FileInterface $file): FileSet
+    public function addFile(FileInterface $file): static
     {
         $this->files[] = $file;
 
@@ -129,9 +124,9 @@ class FileSet implements IteratorAggregate, Countable
      *
      * @param callable $callback
      *
-     * @return FileSet
+     * @return static
      */
-    public function filter(callable $callback): FileSet
+    public function filter(callable $callback): static
     {
         $fileSet = new FileSet();
 

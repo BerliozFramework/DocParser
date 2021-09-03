@@ -17,33 +17,24 @@ namespace Berlioz\DocParser\Treatment;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\DocGenerator;
-use Berlioz\HtmlSelector\Exception\QueryException;
-use Berlioz\HtmlSelector\Exception\SelectorException;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
+use Berlioz\HtmlSelector\HtmlSelector;
 
-/**
- * Class BootstrapTreatment.
- *
- * @package Berlioz\DocParser\Treatment
- */
 class BootstrapTreatment implements TreatmentInterface
 {
-    private DocGenerator $docGenerator;
+    private HtmlSelector $htmlSelector;
 
     /**
      * BootstrapTreatment constructor.
-     *
-     * @param DocGenerator $docGenerator
      */
-    public function __construct(DocGenerator $docGenerator)
+    public function __construct()
     {
-        $this->docGenerator = $docGenerator;
+        $this->htmlSelector = new HtmlSelector();
     }
 
     /**
      * @inheritDoc
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
     public function handle(Documentation $documentation): void
     {
@@ -58,12 +49,11 @@ class BootstrapTreatment implements TreatmentInterface
      *
      * @param Page $page
      *
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
     public function doBootstrapTreatment(Page $page): void
     {
-        $query = Query::loadHtml($page->getContents());
+        $query = $this->htmlSelector->query($page->getContents());
 
         // Images
         $query->find('img')->addClass('img-fluid');

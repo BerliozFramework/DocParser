@@ -73,10 +73,9 @@ class EntryTest extends TestCase
     public function testOrder()
     {
         $mainEntry = new Entry('Main entry');
-        $mainEntry
-            ->addEntry($entry1 = new Entry('Entry 1'))
-            ->addEntry($entry2 = new Entry('Entry 2'))
-            ->addEntry($entry3 = new Entry('Entry 3'));
+        $mainEntry->addEntry($entry1 = new Entry('Entry 1'));
+        $mainEntry->addEntry($entry2 = new Entry('Entry 2'));
+        $mainEntry->addEntry($entry3 = new Entry('Entry 3'));
 
         $this->assertCount(3, $mainEntry);
 
@@ -100,10 +99,9 @@ class EntryTest extends TestCase
     public function testCountVisible()
     {
         $mainEntry = new Entry('Main entry');
-        $mainEntry
-            ->addEntry($entry1 = new Entry('Entry 1'))
-            ->addEntry($entry2 = new Entry('Entry 2'))
-            ->addEntry($entry3 = new Entry('Entry 3'));
+        $mainEntry->addEntry($entry1 = new Entry('Entry 1'));
+        $mainEntry->addEntry($entry2 = new Entry('Entry 2'));
+        $mainEntry->addEntry($entry3 = new Entry('Entry 3'));
 
         $this->assertEquals(3, $mainEntry->countVisible());
         $this->assertEquals(0, $mainEntry->countVisible(false));
@@ -150,11 +148,10 @@ class EntryTest extends TestCase
     public function testSerialization()
     {
         $mainEntry = new Entry('Main entry', '/path/to');
-        $mainEntry
-            ->setId('my-id')
-            ->setOrder(2)
-            ->setVisible(true)
-            ->setActive(false);
+        $mainEntry->setId('my-id');
+        $mainEntry->setOrder(2);
+        $mainEntry->setVisible(true);
+        $mainEntry->setActive(false);
 
         $mainEntry2 = unserialize(serialize($mainEntry));
 

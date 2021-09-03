@@ -16,11 +16,6 @@ namespace Berlioz\DocParser\Exception;
 
 use Exception;
 
-/**
- * Class DocParserException.
- *
- * @package Berlioz\DocParser\Exception
- */
 class DocParserException extends Exception
 {
 }

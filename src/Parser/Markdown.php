@@ -20,17 +20,13 @@ use Berlioz\DocParser\Parser\CommonMark\IndexExtension;
 use Berlioz\Http\Message\Stream\MemoryStream;
 use DateTimeImmutable;
 use Exception;
-use League\CommonMark\ConfigurableEnvironmentInterface;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
+use League\CommonMark\Environment\EnvironmentInterface;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
 use League\Flysystem\FileAttributes;
 
-/**
- * Class Markdown.
- *
- * @package Berlioz\DocParser\Parser
- */
 class Markdown implements ParserInterface
 {
     private MarkdownConverter $markdownConverter;
@@ -40,17 +36,17 @@ class Markdown implements ParserInterface
      * Markdown constructor.
      *
      * @param array $config
-     * @param ConfigurableEnvironmentInterface|null $environment
+     * @param EnvironmentInterface|null $environment
      */
-    public function __construct(array $config = [], ?ConfigurableEnvironmentInterface $environment = null)
+    public function __construct(array $config = [], ?EnvironmentInterface $environment = null)
     {
         if (null === $environment) {
-            $environment = Environment::createCommonMarkEnvironment();
+            $environment = new Environment($config);
             $environment->addExtension(new GithubFlavoredMarkdownExtension());
         }
 
         // Add default index extension
-        $environment->mergeConfig($config);
+        $environment->addExtension(new CommonMarkCoreExtension());
         $environment->addExtension($this->indexExtension = new IndexExtension());
 
         $this->markdownConverter = new MarkdownConverter($environment);
@@ -83,7 +79,7 @@ class Markdown implements ParserInterface
      */
     public function acceptExtension(string $extension): bool
     {
-        return in_array($extension, ['md']);
+        return $extension == 'md';
     }
 
     /**
@@ -93,7 +89,7 @@ class Markdown implements ParserInterface
     {
         try {
             $stream = new MemoryStream();
-            $stream->write($this->markdownConverter->convertToHtml($src));
+            $stream->write($this->markdownConverter->convertToHtml($src)->getContent());
 
             $page =
                 new Page(

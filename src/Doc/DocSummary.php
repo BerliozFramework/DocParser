@@ -17,11 +17,6 @@ namespace Berlioz\DocParser\Doc;
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Doc\Summary\Entry;
 
-/**
- * Class DocSummary.
- *
- * @package Berlioz\DocParser\Doc
- */
 class DocSummary extends PageSummary
 {
     /**
@@ -76,9 +71,8 @@ class DocSummary extends PageSummary
             // Define url and order if it's last element
             if ($i + 1 == $nbEntries) {
                 $entryVisible = (bool)$page->getMeta('summary-visible', true);
-                $entry
-                    ->setPath($page->getPath())
-                    ->setVisible($entryVisible, $entryVisible);
+                $entry->setPath($page->getPath());
+                $entry->setVisible($entryVisible, $entryVisible);
             }
 
             if (isset($summaryOrder[$i])) {
@@ -151,8 +145,7 @@ class DocSummary extends PageSummary
     private function filterBreadcrumb(array $breadcrumb): array
     {
         array_walk($breadcrumb, fn(&$value) => $value = trim($value));
-        $breadcrumb = array_filter($breadcrumb);
 
-        return $breadcrumb;
+        return array_filter($breadcrumb);
     }
 }

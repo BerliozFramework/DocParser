@@ -17,24 +17,29 @@ namespace Berlioz\DocParser\Treatment;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\Page;
-use Berlioz\HtmlSelector\Exception\QueryException;
-use Berlioz\HtmlSelector\Exception\SelectorException;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
+use Berlioz\HtmlSelector\HtmlSelector;
 
 class PathTreatment implements TreatmentInterface
 {
     use PathTreatmentTrait;
 
+    private HtmlSelector $htmlSelector;
+
+    public function __construct()
+    {
+        $this->htmlSelector = new HtmlSelector();
+    }
+
     /**
      * @inheritDoc
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
     public function handle(Documentation $documentation): void
     {
         /** @var Page $page */
         foreach ($documentation->getFiles()->filter(fn($file) => $file instanceof Page) as $page) {
-            $query = Query::loadHtml($page->getContents());
+            $query = $this->htmlSelector->query($page->getContents());
 
             foreach ($query->find('[href]') as $link) {
                 $link->attr('href', $this->getPathResolved($link->attr('href'), $page, $documentation));
@@ -97,7 +102,7 @@ class PathTreatment implements TreatmentInterface
             return null;
         }
 
-        if (substr($url['path'], 0, 1) === '/') {
+        if (str_starts_with($url['path'], '/')) {
             return $path;
         }
 

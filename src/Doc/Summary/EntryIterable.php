@@ -16,11 +16,6 @@ namespace Berlioz\DocParser\Doc\Summary;
 
 use ArrayIterator;
 
-/**
- * Trait EntryIterable.
- *
- * @package Berlioz\DocParser\Doc\Summary
- */
 trait EntryIterable
 {
     protected array $entries = [];
@@ -40,7 +35,7 @@ trait EntryIterable
      *
      * @return int
      */
-    public function count():int
+    public function count(): int
     {
         return count($this->entries);
     }
@@ -66,10 +61,8 @@ trait EntryIterable
 
     /**
      * Order entries.
-     *
-     * @return static
      */
-    public function orderEntries()
+    public function orderEntries(): void
     {
         // Order entries
         usort(
@@ -101,8 +94,6 @@ trait EntryIterable
         foreach ($this->entries as $entry) {
             $entry->orderEntries();
         }
-
-        return $this;
     }
 
     /**
@@ -112,7 +103,7 @@ trait EntryIterable
      *
      * @return Entry|null
      */
-    public function getEntryByTitle(string $title)
+    public function getEntryByTitle(string $title): ?Entry
     {
         foreach ($this->entries as $entry) {
             if ($entry->getTitle() == $title) {
@@ -137,10 +128,8 @@ trait EntryIterable
      * Add entry.
      *
      * @param Entry $entry
-     *
-     * @return static
      */
-    public function addEntry(Entry $entry)
+    public function addEntry(Entry $entry): void
     {
         $entry->setParent(null);
         $this->entries[] = $entry;
@@ -148,7 +137,5 @@ trait EntryIterable
         if ($this instanceof Entry) {
             $entry->setParent($this);
         }
-
-        return $this;
     }
 }

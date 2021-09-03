@@ -21,13 +21,12 @@ class PageSummaryTest extends TestCase
     public function testSerialization()
     {
         $pageSummary = new PageSummary();
-        $pageSummary
-            ->addEntry(new Entry('Entry 1'))
-            ->addEntry(new Entry('Entry 2'))
-            ->addEntry(
-                (new Entry('Entry 3'))
-                    ->addEntry(new Entry('Entry 4'))
-            );
+        $pageSummary->addEntry(new Entry('Entry 1'));
+        $pageSummary->addEntry(new Entry('Entry 2'));
+
+        $entry = new Entry('Entry 3');
+        $entry->addEntry(new Entry('Entry 4'));
+        $pageSummary->addEntry($entry);
 
         $pageSummary2 = unserialize(serialize($pageSummary));
 

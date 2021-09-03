@@ -20,7 +20,7 @@ $ composer require berlioz/doc-parser
 
 ### Dependencies
 
-- **PHP** ^7.4 || ^8.0
+- **PHP** ^8.0
 - PHP libraries:
   - **mbstring**
 - Packages:

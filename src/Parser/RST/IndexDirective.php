@@ -17,19 +17,14 @@ namespace Berlioz\DocParser\Parser\RST;
 use Gregwar\RST\Directive;
 use Gregwar\RST\Parser;
 
-/**
- * Class IndexDirective.
- *
- * @package Berlioz\DocParser\Parser\RST
- */
 class IndexDirective extends Directive
 {
-    public function getName()
+    public function getName(): string
     {
         return 'index';
     }
 
-    public function processNode(Parser $parser, $variable, $data, array $options)
+    public function processNode(Parser $parser, $variable, $data, array $options): IndexNode
     {
         return new IndexNode($options);
     }

@@ -12,6 +12,7 @@
 
 namespace Berlioz\DocParser\Tests\Treatment;
 
+use Berlioz\DocParser\Treatment\PathTreatmentTrait;
 use PHPUnit\Framework\TestCase;
 
 class PathTreatmentTraitTest extends TestCase
@@ -37,11 +38,14 @@ class PathTreatmentTraitTest extends TestCase
      * @param $src
      * @param $dst
      * @param $excepted
+     *
      * @dataProvider absolutePathProvider
      */
     public function testResolveAbsolutePath($src, $dst, $excepted)
     {
-        $pathTreatment = new FakePathTreatment();
+        /** @var PathTreatmentTrait $pathTreatment */
+        $pathTreatment = $this->getMockForTrait(PathTreatmentTrait::class);
+
         $this->assertEquals($excepted, $pathTreatment->resolveAbsolutePath($src, $dst));
     }
 
@@ -58,6 +62,7 @@ class PathTreatmentTraitTest extends TestCase
             ['foo/index.md', '/foo/baz.md', './baz.md'],
             ['./foo/bar/index.md', '/baz.md', '../../baz.md'],
             ['/foo/bar/index.md', '/qux/baz.md', '../../qux/baz.md'],
+            ['/foo/bar/index.md', 'qux/baz.md', './qux/baz.md'],
             ['/foo/bar/quux/index.md', '/foo/qux/corge/baz.md', '../../qux/corge/baz.md'],
             ['./foo/index.md', './bar/baz.md', './bar/baz.md'],
             ['foo/index.md', '/bar/baz.md', '../bar/baz.md'],
@@ -71,7 +76,9 @@ class PathTreatmentTraitTest extends TestCase
      */
     public function testResolveRelativePath($src, $dst, $excepted)
     {
-        $pathTreatment = new FakePathTreatment();
+        /** @var PathTreatmentTrait $pathTreatment */
+        $pathTreatment = $this->getMockForTrait(PathTreatmentTrait::class);
+
         $this->assertEquals($excepted, $pathTreatment->resolveRelativePath($src, $dst));
     }
 }

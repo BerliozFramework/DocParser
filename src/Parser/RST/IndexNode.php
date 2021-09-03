@@ -16,11 +16,6 @@ namespace Berlioz\DocParser\Parser\RST;
 
 use Gregwar\RST\Nodes\Node;
 
-/**
- * Class IndexNode.
- *
- * @package Berlioz\DocParser\Parser\RST
- */
 class IndexNode extends Node
 {
     public function render()

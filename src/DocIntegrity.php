@@ -18,18 +18,19 @@ use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Treatment\PathTreatmentTrait;
-use Berlioz\HtmlSelector\Exception\QueryException;
-use Berlioz\HtmlSelector\Exception\SelectorException;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
+use Berlioz\HtmlSelector\HtmlSelector;
 
-/**
- * Class DocIntegrity.
- *
- * @package Berlioz\DocParser
- */
 class DocIntegrity
 {
     use PathTreatmentTrait;
+
+    private HtmlSelector $htmlSelector;
+
+    public function __construct()
+    {
+        $this->htmlSelector = new HtmlSelector();
+    }
 
     /**
      * Check integrity of page.
@@ -38,13 +39,12 @@ class DocIntegrity
      * @param Page $page
      *
      * @return array
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
     public function checkPage(Documentation $documentation, Page $page): array
     {
         $errors = [];
-        $queryHtml = Query::loadHtml($page->getContents());
+        $queryHtml = $this->htmlSelector->query($page->getContents());
 
         // Get links
         foreach ($queryHtml->find('a[href]') as $link) {
@@ -54,8 +54,8 @@ class DocIntegrity
             if (isset($url['host']) || !isset($url['path'])) {
                 continue;
             }
-//var_dump($page->getPath(), $url['path'], $this->resolveAbsolutePath($page->getPath(), $url['path']), '#######');
-            $file = $documentation->handle('/'.$this->resolveAbsolutePath($page->getPath(), $url['path']));
+
+            $file = $documentation->handle('/' . $this->resolveAbsolutePath($page->getPath(), $url['path']));
 
             if (null !== $file) {
                 continue;
@@ -99,10 +99,9 @@ class DocIntegrity
      * @param Documentation $documentation
      *
      * @return array
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
-    public function check(Documentation $documentation)
+    public function check(Documentation $documentation): array
     {
         $errors = [];
 

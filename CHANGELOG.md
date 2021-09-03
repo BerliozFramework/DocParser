@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a Changelog](http://keepachangelog.com/).
 
+## [v2.0.0-beta1] - 2021-09-03
+
+# Changed
+
+- Bump compatibility version with PHP to ^8.0
+- Bump compatibility version with `league/commonmark` to ^2.0
+- Bump compatibility version with `berlioz/html-selector` to ^2.0
+- Bump compatibility version with `berlioz/http-message` to ^2.0
+- Strict types
+- PHP 8 refactoring
+
 ## [v1.3.0] - 2021-09-02
 
 ### Changed

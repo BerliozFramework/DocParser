@@ -32,9 +32,9 @@ trait PathTreatmentTrait
         $dstPath = $this->uniformizePathSeparator($dstPath);
         $finalPath = $dstPath;
 
-        if (substr($dstPath, 0, 1) !== '/') {
+        if (!str_starts_with($dstPath, '/')) {
             // Complete absolute link
-            if (substr($dstPath, 0, 2) === './') {
+            if (str_starts_with($dstPath, './')) {
                 $dstPath = substr($dstPath, 2);
             }
 
@@ -56,7 +56,7 @@ trait PathTreatmentTrait
             $finalPath = preg_replace('#(/|^)([^\\\/?%*:|"<>.]+)/../#', '/', $finalPath, -1, $nbReplacements);
         } while ($nbReplacements > 0);
 
-        if (strpos($finalPath, './') === false) {
+        if (!str_contains($finalPath, './')) {
             return ltrim($finalPath, '/');
         }
 
@@ -76,10 +76,10 @@ trait PathTreatmentTrait
         $srcPath = $this->resolveAbsolutePath('/', $srcPath);
         $dstPath = $this->resolveAbsolutePath($srcPath, $dstPath);
 
-        if (substr($srcPath, 0, 2) === '..') {
+        if (str_starts_with($srcPath, '..')) {
             throw new InvalidArgumentException('Source path must be a relative path');
         }
-        if (substr($srcPath, 0, 2) === './') {
+        if (str_starts_with($srcPath, './')) {
             $srcPath = substr($srcPath, 2);
         }
 
@@ -108,11 +108,11 @@ trait PathTreatmentTrait
         $relativePath = '';
         if ($differentDepthPath > 0) {
             $relativePath .= str_repeat('../', $differentDepthPath);
-            $relativePath .= implode('/', (array)array_slice($dstPath, min($dstDepth, $differentDepthPath) - 1));
+            $relativePath .= implode('/', array_slice($dstPath, min($dstDepth, $differentDepthPath) - 1));
         }
         if ($differentDepthPath === 0) {
             $relativePath .= './';
-            $relativePath .= implode('/', (array)array_slice($dstPath, $srcDepth, $dstDepth));
+            $relativePath .= implode('/', array_slice($dstPath, $srcDepth, $dstDepth));
         }
 
         // Add file to relative path
@@ -120,9 +120,7 @@ trait PathTreatmentTrait
             $relativePath .= '/' . $dstFilename;
         }
 
-        $relativePath = preg_replace('#/{2,}#', '/', $relativePath);
-
-        return $relativePath;
+        return preg_replace('#/{2,}#', '/', $relativePath);
     }
 
     /**
@@ -135,9 +133,8 @@ trait PathTreatmentTrait
     private function uniformizePathSeparator(string $path): string
     {
         $path = str_replace('\\', '/', $path);
-        $path = preg_replace('#/{2,}#', '', $path);
 
-        return $path;
+        return preg_replace('#/{2,}#', '', $path);
     }
 
     /**

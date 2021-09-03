@@ -14,11 +14,6 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Exception;
 
-/**
- * Class ParserException.
- *
- * @package Berlioz\DocParser\Exception
- */
 class ParserException extends DocParserException
 {
 }

@@ -15,20 +15,18 @@ declare(strict_types=1);
 namespace Berlioz\DocParser\Parser\CommonMark;
 
 use Berlioz\DocParser\Parser\TraitCastValue;
-use League\CommonMark\Block\Element\FencedCode;
-use League\CommonMark\EnvironmentInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
+use League\Config\ConfigurationInterface;
 
 class IndexProcessor
 {
     use TraitCastValue;
 
-    private EnvironmentInterface $environment;
     private array $index = [];
 
-    public function __construct(EnvironmentInterface $environment)
+    public function __construct(private ConfigurationInterface $config)
     {
-        $this->environment = $environment;
     }
 
     /**
@@ -53,7 +51,7 @@ class IndexProcessor
                 $code->detach();
 
 
-                $content = $code->getStringContent();
+                $content = $code->getLiteral();
                 $metas = preg_split('/\v/u', $content);
                 $metas = array_filter($metas);
                 array_walk($metas, fn(&$value) => $value = explode(':', $value, 2));

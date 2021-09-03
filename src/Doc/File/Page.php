@@ -17,11 +17,6 @@ namespace Berlioz\DocParser\Doc\File;
 use Berlioz\DocParser\Doc\PageSummary;
 use DateTimeInterface;
 
-/**
- * Class Page.
- *
- * @package Berlioz\DocParser\File
- */
 class Page extends RawFile
 {
     protected ?string $title = null;
@@ -53,7 +48,7 @@ class Page extends RawFile
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         $info = parent::__debugInfo();
 
@@ -115,14 +110,10 @@ class Page extends RawFile
      * Set title.
      *
      * @param string|null $title
-     *
-     * @return static
      */
-    public function setTitle(?string $title): Page
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
-
-        return $this;
     }
 
     /**
@@ -143,14 +134,10 @@ class Page extends RawFile
      * Set description.
      *
      * @param string|null $description
-     *
-     * @return static
      */
-    public function setDescription(?string $description): Page
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
     /**
@@ -169,9 +156,9 @@ class Page extends RawFile
      * @param string $name
      * @param mixed $default
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function getMeta($name, $default = null)
+    public function getMeta(string $name, mixed $default = null): mixed
     {
         return $this->metas[$name] ?? $default;
     }
@@ -180,14 +167,10 @@ class Page extends RawFile
      * Set metas.
      *
      * @param array $metas
-     *
-     * @return static
      */
-    public function setMetas(array $metas): Page
+    public function setMetas(array $metas): void
     {
         $this->metas = $metas;
-
-        return $this;
     }
 
     /**
@@ -225,13 +208,9 @@ class Page extends RawFile
      * Set summary.
      *
      * @param PageSummary $summary
-     *
-     * @return static
      */
-    public function setSummary(PageSummary $summary): Page
+    public function setSummary(PageSummary $summary): void
     {
         $this->summary = $summary;
-
-        return $this;
     }
 }

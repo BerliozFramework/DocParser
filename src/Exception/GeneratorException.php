@@ -14,11 +14,6 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Exception;
 
-/**
- * Class GeneratorException.
- *
- * @package Berlioz\DocParser\Exception
- */
 class GeneratorException extends DocParserException
 {
 }

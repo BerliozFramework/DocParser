@@ -14,11 +14,6 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Doc\Summary;
 
-/**
- * Interface SummaryInterface.
- *
- * @package Berlioz\DocParser\Doc\Summary
- */
 interface SummaryInterface
 {
     /**

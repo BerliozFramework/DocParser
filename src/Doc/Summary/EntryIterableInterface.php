@@ -17,11 +17,6 @@ namespace Berlioz\DocParser\Doc\Summary;
 use Countable;
 use IteratorAggregate;
 
-/**
- * Interface EntryIterableInterface.
- *
- * @package Berlioz\DocParser\Doc\Summary
- */
 interface EntryIterableInterface extends Countable, IteratorAggregate
 {
     /**

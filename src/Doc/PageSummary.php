@@ -16,13 +16,9 @@ namespace Berlioz\DocParser\Doc;
 
 use Berlioz\DocParser\Doc\Summary\EntryIterable;
 use Berlioz\DocParser\Doc\Summary\EntryIterableInterface;
+use Berlioz\DocParser\Doc\Summary\SummaryInterface;
 
-/**
- * Class PageSummary.
- *
- * @package Berlioz\DocParser
- */
-class PageSummary implements EntryIterableInterface
+class PageSummary implements EntryIterableInterface, SummaryInterface
 {
     use EntryIterable;
 

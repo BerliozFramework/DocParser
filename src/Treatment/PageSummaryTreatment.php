@@ -17,21 +17,22 @@ namespace Berlioz\DocParser\Treatment;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Doc\Summary\Entry;
-use Berlioz\HtmlSelector\Exception\QueryException;
-use Berlioz\HtmlSelector\Exception\SelectorException;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
+use Berlioz\HtmlSelector\HtmlSelector;
+use Berlioz\HtmlSelector\Query\Query;
 
-/**
- * Class PageSummaryTreatment.
- *
- * @package Berlioz\DocParser\Treatment
- */
 class PageSummaryTreatment implements TreatmentInterface
 {
+    private HtmlSelector $htmlSelector;
+
+    public function __construct()
+    {
+        $this->htmlSelector = new HtmlSelector();
+    }
+
     /**
      * @inheritDoc
-     * @throws SelectorException
-     * @throws QueryException
+     * @throws HtmlSelectorException
      */
     public function handle(Documentation $documentation): void
     {
@@ -46,13 +47,12 @@ class PageSummaryTreatment implements TreatmentInterface
      *
      * @param Page $page
      *
-     * @throws SelectorException
-     * @throws QueryException
+     * @throws HtmlSelectorException
      */
     public function makePageSummary(Page $page): void
     {
         $summary = $page->getSummary();
-        $query = Query::loadHtml($page->getContents());
+        $query = $this->htmlSelector->query($page->getContents());
         $ids = [];
         $headers = $query->find(':header:not(h1)');
 
@@ -125,9 +125,8 @@ class PageSummaryTreatment implements TreatmentInterface
     private function prepareId(string $str): string
     {
         $id = preg_replace(['/[^\w\s\-]/i', '/\s+/', '/-{2,}/'], ['', '-', '-'], $str);
-        $id = trim(mb_strtolower($id), '-');
 
-        return $id;
+        return trim(mb_strtolower($id), '-');
     }
 
     /**
@@ -136,8 +135,7 @@ class PageSummaryTreatment implements TreatmentInterface
      * @param Query $element
      *
      * @return int
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
     private function getHeaderLevel(Query $element): int
     {

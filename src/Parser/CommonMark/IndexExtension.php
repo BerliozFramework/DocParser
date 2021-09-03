@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Parser\CommonMark;
 
-use League\CommonMark\ConfigurableEnvironmentInterface;
+use League\CommonMark\Environment\EnvironmentBuilderInterface;
 use League\CommonMark\Event\DocumentParsedEvent;
 use League\CommonMark\Extension\ExtensionInterface;
 
@@ -22,14 +22,11 @@ class IndexExtension implements ExtensionInterface
 {
     private IndexProcessor $indexProcessor;
 
-    /**
-     * @inheritDoc
-     */
-    public function register(ConfigurableEnvironmentInterface $environment)
+    public function register(EnvironmentBuilderInterface $environment): void
     {
         $environment->addEventListener(
             DocumentParsedEvent::class,
-            $this->indexProcessor = new IndexProcessor($environment)
+            $this->indexProcessor = new IndexProcessor($environment->getConfiguration())
         );
     }
 

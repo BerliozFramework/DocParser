@@ -24,9 +24,9 @@ trait TraitCastValue
      *
      * @param $value
      *
-     * @return mixed|string
+     * @return mixed
      */
-    protected function castValue($value)
+    protected function castValue($value): mixed
     {
         if (is_string($value)) {
             $value = trim($value);

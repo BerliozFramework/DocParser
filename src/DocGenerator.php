@@ -17,6 +17,7 @@ namespace Berlioz\DocParser;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\RawFile;
+use Berlioz\DocParser\Exception\DocParserException;
 use Berlioz\DocParser\Exception\GeneratorException;
 use Berlioz\DocParser\Exception\ParserException;
 use Berlioz\DocParser\Parser\ParserInterface;
@@ -26,23 +27,16 @@ use Berlioz\DocParser\Treatment\PathTreatment;
 use Berlioz\DocParser\Treatment\TitleTreatment;
 use Berlioz\DocParser\Treatment\TreatmentInterface;
 use DateTimeImmutable;
-use Exception;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemReader;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\Visibility;
 use Throwable;
 
-/**
- * Class DocGenerator.
- *
- * @package Berlioz\DocParser
- */
 class DocGenerator
 {
-    protected ParserInterface $parser;
-    protected array $config = [];
     protected array $treatments = [];
 
     /**
@@ -51,11 +45,10 @@ class DocGenerator
      * @param ParserInterface $parser
      * @param array $config
      */
-    public function __construct(ParserInterface $parser, array $config = [])
-    {
-        $this->parser = $parser;
-        $this->config = $config;
-
+    public function __construct(
+        protected ParserInterface $parser,
+        protected array $config = []
+    ) {
         $this->addTreatment(new PathTreatment(), 10);
         $this->addTreatment(new TitleTreatment($this), 20);
         $this->addTreatment(new PageSummaryTreatment(), 50);
@@ -66,11 +59,11 @@ class DocGenerator
      * Get config.
      *
      * @param string $key
-     * @param mixed $default
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    public function getConfig(string $key, $default = null)
+    public function getConfig(string $key, mixed $default = null): mixed
     {
         return $this->config[$key] ??= $default;
     }
@@ -83,7 +76,7 @@ class DocGenerator
      *
      * @return static
      */
-    public function addTreatment(TreatmentInterface $treatment, int $priority = 100): DocGenerator
+    public function addTreatment(TreatmentInterface $treatment, int $priority = 100): static
     {
         $this->treatments[$priority][] = $treatment;
 
@@ -127,7 +120,7 @@ class DocGenerator
      * @param string $location
      *
      * @return Documentation
-     * @throws Exception
+     * @throws DocParserException
      */
     public function handle(string $version, Filesystem $filesystem, string $location = '/'): Documentation
     {
@@ -136,7 +129,7 @@ class DocGenerator
 
             $listing =
                 $filesystem
-                    ->listContents($location, Filesystem::LIST_DEEP)
+                    ->listContents($location, FilesystemReader::LIST_DEEP)
                     ->filter(
                         function (StorageAttributes $attributes) {
                             if (preg_match('#(^|/)\.#', $attributes->path()) === 1) {
@@ -154,8 +147,8 @@ class DocGenerator
                 // Detection of mime
                 if (null === $fileAttributes->mimeType()) {
                     $fileAttributes = $fileAttributes->jsonSerialize();
-                    $fileAttributes[FileAttributes::ATTRIBUTE_MIME_TYPE] =
-                        $filesystem->mimeType($fileAttributes[FileAttributes::ATTRIBUTE_PATH]);
+                    $fileAttributes[StorageAttributes::ATTRIBUTE_MIME_TYPE] =
+                        $filesystem->mimeType($fileAttributes[StorageAttributes::ATTRIBUTE_PATH]);
 
                     $fileAttributes = FileAttributes::fromArray($fileAttributes);
                 }
@@ -167,8 +160,8 @@ class DocGenerator
             $this->doTreatments($documentation);
 
             return $documentation;
-        } catch (Throwable $e) {
-            throw new GeneratorException('Unable to generate documentation', 0, $e);
+        } catch (Throwable $exception) {
+            throw new GeneratorException('Unable to generate documentation', 0, $exception);
         }
     }
 

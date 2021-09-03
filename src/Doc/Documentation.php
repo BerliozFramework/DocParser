@@ -18,14 +18,8 @@ use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\FileSet;
 use Berlioz\DocParser\Doc\File\Page;
 
-/**
- * Class Documentation.
- *
- * @package Berlioz\DocParser
- */
 class Documentation
 {
-    private string $version;
     private DocSummary $summary;
     private FileSet $files;
 
@@ -34,9 +28,8 @@ class Documentation
      *
      * @param string $version
      */
-    public function __construct(string $version)
+    public function __construct(private string $version)
     {
-        $this->version = $version;
         $this->summary = new DocSummary();
         $this->files = new FileSet();
     }
@@ -46,7 +39,7 @@ class Documentation
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'version' => $this->version,
@@ -130,10 +123,7 @@ class Documentation
 
         if ($file instanceof Page) {
             $summaryEntry = $this->getSummary()->findByPage($file);
-
-            if (null !== $summaryEntry) {
-                $summaryEntry->setActive(true, true);
-            }
+            $summaryEntry?->setActive(true, true);
         }
 
         return $file;

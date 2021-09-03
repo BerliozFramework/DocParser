@@ -18,11 +18,6 @@ use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Exception\ParserException;
 use League\Flysystem\FileAttributes;
 
-/**
- * Interface ParserInterface.
- *
- * @package Berlioz\DocParser\Parser
- */
 interface ParserInterface
 {
     /**

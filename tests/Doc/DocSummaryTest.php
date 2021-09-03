@@ -79,10 +79,12 @@ EOF
     public function testFindByPage()
     {
         $page = new Page(fopen('php://memory', 'r'), 'test.md');
-        $page->setTitle('My page')->setMetas(['breadcrumb' => 'My; Breadcrumb']);
+        $page->setTitle('My page');
+        $page->setMetas(['breadcrumb' => 'My; Breadcrumb']);
 
         $page2 = new Page(fopen('php://memory', 'r'), 'test2.md');
-        $page2->setTitle('My page 2')->setMetas(['breadcrumb' => 'My']);
+        $page2->setTitle('My page 2');
+        $page2->setMetas(['breadcrumb' => 'My']);
 
         $page3 = new Page(fopen('php://memory', 'r'), 'test3.md');
         $page3->setTitle('My page 3');

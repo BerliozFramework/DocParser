@@ -14,17 +14,10 @@ declare(strict_types=1);
 
 namespace Berlioz\DocParser\Doc\Summary;
 
-/**
- * Class Entry.
- *
- * @package Berlioz\DocParser\Doc\Summary
- */
-class Entry implements EntryIterableInterface
+class Entry implements EntryIterableInterface, SummaryInterface
 {
     use EntryIterable;
 
-    private string $title;
-    private ?string $path;
     private ?string $id = null;
     private ?int $order = null;
     private bool $visible = true;
@@ -37,10 +30,10 @@ class Entry implements EntryIterableInterface
      * @param string $title
      * @param string|null $path
      */
-    public function __construct(string $title, ?string $path = null)
-    {
-        $this->title = $title;
-        $this->path = $path;
+    public function __construct(
+        private string $title,
+        private ?string $path = null
+    ) {
     }
 
     /**
@@ -48,7 +41,7 @@ class Entry implements EntryIterableInterface
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'title' => $this->title,
@@ -101,7 +94,7 @@ class Entry implements EntryIterableInterface
      *
      * @return string
      */
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -110,14 +103,10 @@ class Entry implements EntryIterableInterface
      * Set title.
      *
      * @param string $title
-     *
-     * @return static
      */
-    public function setTitle(string $title): Entry
+    public function setTitle(string $title): void
     {
         $this->title = $title;
-
-        return $this;
     }
 
     /**
@@ -133,15 +122,11 @@ class Entry implements EntryIterableInterface
     /**
      * Set path.
      *
-     * @param null|string $path
-     *
-     * @return static
+     * @param string|null $path
      */
-    public function setPath(string $path): Entry
+    public function setPath(?string $path): void
     {
         $this->path = $path;
-
-        return $this;
     }
 
     /**
@@ -158,14 +143,10 @@ class Entry implements EntryIterableInterface
      * Set id.
      *
      * @param null|string $id
-     *
-     * @return static
      */
-    public function setId(?string $id): Entry
+    public function setId(?string $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     /**
@@ -182,14 +163,10 @@ class Entry implements EntryIterableInterface
      * Set order.
      *
      * @param int|null $order
-     *
-     * @return static
      */
-    public function setOrder(?int $order): Entry
+    public function setOrder(?int $order): void
     {
         $this->order = $order;
-
-        return $this;
     }
 
     /**
@@ -199,7 +176,7 @@ class Entry implements EntryIterableInterface
      *
      * @return int
      */
-    public function countVisible(bool $value = true)
+    public function countVisible(bool $value = true): int
     {
         $nb = 0;
 
@@ -232,10 +209,8 @@ class Entry implements EntryIterableInterface
      *
      * @param bool $visible
      * @param bool $recursive
-     *
-     * @return static
      */
-    public function setVisible(bool $visible, bool $recursive = false): Entry
+    public function setVisible(bool $visible, bool $recursive = false): void
     {
         $this->visible = $visible;
 
@@ -245,8 +220,6 @@ class Entry implements EntryIterableInterface
                 $parent->setVisible($visible, $recursive);
             }
         }
-
-        return $this;
     }
 
     /**
@@ -264,10 +237,8 @@ class Entry implements EntryIterableInterface
      *
      * @param bool $active
      * @param bool $recursive
-     *
-     * @return static
      */
-    public function setActive(bool $active, bool $recursive = false): Entry
+    public function setActive(bool $active, bool $recursive = false): void
     {
         $this->active = $active;
 
@@ -277,8 +248,6 @@ class Entry implements EntryIterableInterface
                 $parent->setActive($active, $recursive);
             }
         }
-
-        return $this;
     }
 
     /**
@@ -295,13 +264,9 @@ class Entry implements EntryIterableInterface
      * Set parent entry.
      *
      * @param Entry|null $parent
-     *
-     * @return Entry
      */
-    public function setParent(?Entry $parent): Entry
+    public function setParent(?Entry $parent): void
     {
         $this->parent = $parent;
-
-        return $this;
     }
 }

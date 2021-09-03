@@ -14,7 +14,7 @@ namespace Berlioz\DocParser\Tests\Treatment;
 
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Treatment\BootstrapTreatment;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\HtmlSelector;
 
 class BootstrapTreatmentTest extends AbstractTestCase
 {
@@ -28,7 +28,7 @@ class BootstrapTreatmentTest extends AbstractTestCase
         $this->assertNotNull($page);
         $bootstrapTreatment->doBootstrapTreatment($page);
 
-        $html = Query::loadHtml($page->getContents());
+        $html = (new HtmlSelector())->query($page->getContents());
 
         // Images
         $this->assertCount(1, $html->find('img'));

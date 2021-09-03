@@ -17,11 +17,6 @@ namespace Berlioz\DocParser\Doc\File;
 use DateTimeInterface;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Interface FileInterface.
- *
- * @package Berlioz\DocParser\File
- */
 interface FileInterface
 {
     /**
@@ -84,26 +79,22 @@ interface FileInterface
      * Set stream.
      *
      * @param resource $stream
-     *
-     * @return static
      */
-    public function setStream($stream);
+    public function setStream($stream): void;
 
     /**
      * Get contents.
      *
      * @return string
      */
-    public function getContents();
+    public function getContents(): string;
 
     /**
      * Set contents.
      *
      * @param string $contents
-     *
-     * @return static
      */
-    public function setContents(string $contents);
+    public function setContents(string $contents): void;
 
     /**
      * Get hash.

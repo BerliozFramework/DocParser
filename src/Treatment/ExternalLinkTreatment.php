@@ -17,33 +17,26 @@ namespace Berlioz\DocParser\Treatment;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\DocGenerator;
-use Berlioz\HtmlSelector\Exception\QueryException;
-use Berlioz\HtmlSelector\Exception\SelectorException;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
+use Berlioz\HtmlSelector\HtmlSelector;
 
-/**
- * Class ExternalLinkTreatment.
- *
- * @package Berlioz\DocParser\Treatment
- */
 class ExternalLinkTreatment implements TreatmentInterface
 {
-    private DocGenerator $docGenerator;
+    private HtmlSelector $htmlSelector;
 
     /**
      * TitleTreatment constructor.
      *
      * @param DocGenerator $docGenerator
      */
-    public function __construct(DocGenerator $docGenerator)
+    public function __construct(private DocGenerator $docGenerator)
     {
-        $this->docGenerator = $docGenerator;
+        $this->htmlSelector = new HtmlSelector();
     }
 
     /**
      * @inheritDoc
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
     public function handle(Documentation $documentation): void
     {
@@ -58,12 +51,11 @@ class ExternalLinkTreatment implements TreatmentInterface
      *
      * @param Page $page
      *
-     * @throws QueryException
-     * @throws SelectorException
+     * @throws HtmlSelectorException
      */
-    public function doExternalLinksTreatment(Page $page)
+    public function doExternalLinksTreatment(Page $page): void
     {
-        $query = Query::loadHtml((string)$page->getContents());
+        $query = $this->htmlSelector->query($page->getContents());
         $links = $query->find('a[href]');
 
         if (0 === count($links)) {
@@ -111,7 +103,7 @@ class ExternalLinkTreatment implements TreatmentInterface
 
         // In authorized hosts
         foreach ($this->docGenerator->getConfig('treatment.external-links.hosts', []) as $host) {
-            if (substr($host, 0, 1) === '.') {
+            if (str_starts_with($host, '.')) {
                 $hostLength = strlen($host);
 
                 if (substr(('.' . $url['host']), -$hostLength) === $host) {

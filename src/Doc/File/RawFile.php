@@ -21,17 +21,8 @@ use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
-/**
- * Class RawFile.
- *
- * @package Berlioz\DocParser\File
- */
 class RawFile implements FileInterface
 {
-    protected ?string $filename = null;
-    protected ?string $mime = null;
-    protected ?DateTimeInterface $datetime;
-    protected $stream;
     protected string $hash;
 
     /**
@@ -43,15 +34,11 @@ class RawFile implements FileInterface
      * @param DateTimeInterface|null $datetime
      */
     public function __construct(
-        $stream,
-        string $filename,
-        ?string $mime = null,
-        ?DateTimeInterface $datetime = null
+        protected $stream,
+        protected string $filename,
+        protected ?string $mime = null,
+        protected ?DateTimeInterface $datetime = null
     ) {
-        $this->filename = $filename;
-        $this->mime = $mime;
-        $this->datetime = $datetime;
-        $this->stream = $stream;
         $this->hash = md5($this->filename);
     }
 
@@ -60,7 +47,7 @@ class RawFile implements FileInterface
      *
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
         return [
             'filename' => $this->filename,
@@ -150,21 +137,19 @@ class RawFile implements FileInterface
     /**
      * @inheritDoc
      */
-    public function setStream($stream)
+    public function setStream($stream): void
     {
         if (!is_resource($stream)) {
             throw new InvalidArgumentException('Argument must a valid stream resource');
         }
 
         $this->stream = $stream;
-
-        return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function getContents()
+    public function getContents(): string
     {
         if (($contents = stream_get_contents($this->stream, -1, 0)) === false) {
             throw new RuntimeException('Unable to get contents of stream');
@@ -176,7 +161,7 @@ class RawFile implements FileInterface
     /**
      * @inheritDoc
      */
-    public function setContents(string $contents)
+    public function setContents(string $contents): void
     {
         if (@ftruncate($this->stream, 0) === false) {
             throw new RuntimeException('Unable to truncate contents of stream');
@@ -185,8 +170,6 @@ class RawFile implements FileInterface
         if (@fwrite($this->stream, $contents) === false) {
             throw new RuntimeException('Unable to write contents of stream');
         }
-
-        return $this;
     }
 
     /**

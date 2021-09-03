@@ -14,7 +14,7 @@ namespace Berlioz\DocParser\Tests\Treatment;
 
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Treatment\ExternalLinkTreatment;
-use Berlioz\HtmlSelector\Query;
+use Berlioz\HtmlSelector\HtmlSelector;
 
 class ExternalLinkTreatmentTest extends AbstractTestCase
 {
@@ -29,7 +29,7 @@ class ExternalLinkTreatmentTest extends AbstractTestCase
 
         $externalLinksTreatment->doExternalLinksTreatment($page);
 
-        $queryTest = Query::loadHtml($page->getContents());
+        $queryTest = (new HtmlSelector())->query($page->getContents());
 
         foreach ($queryTest->find('a[href]') as $link) {
             if ($externalLinksTreatment->isExternalLink($link->attr('href'))) {

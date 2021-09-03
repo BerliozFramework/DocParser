@@ -27,11 +27,6 @@ use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Parser;
 use League\Flysystem\FileAttributes;
 
-/**
- * Class reStructuredText.
- *
- * @package Berlioz\DocParser\Parser
- */
 class reStructuredText implements ParserInterface
 {
     use TraitCastValue;
@@ -77,7 +72,7 @@ class reStructuredText implements ParserInterface
      */
     public function acceptExtension(string $extension): bool
     {
-        return in_array($extension, ['rst']);
+        return $extension == 'rst';
     }
 
     /**
