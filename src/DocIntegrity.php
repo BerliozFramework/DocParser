@@ -17,14 +17,11 @@ namespace Berlioz\DocParser;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\Page;
-use Berlioz\DocParser\Treatment\PathTreatmentTrait;
 use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
 use Berlioz\HtmlSelector\HtmlSelector;
 
 class DocIntegrity
 {
-    use PathTreatmentTrait;
-
     private HtmlSelector $htmlSelector;
 
     public function __construct()
@@ -55,7 +52,7 @@ class DocIntegrity
                 continue;
             }
 
-            $file = $documentation->handle('/' . $this->resolveAbsolutePath($page->getPath(), $url['path']));
+            $file = $documentation->handle(b_resolve_absolute_path($page->getPath(), $url['path']));
 
             if (null !== $file) {
                 continue;
@@ -77,7 +74,7 @@ class DocIntegrity
                 continue;
             }
 
-            $file = $documentation->handle($this->resolveAbsolutePath($page->getPath(), $url['path']));
+            $file = $documentation->handle(b_resolve_absolute_path($page->getPath(), $url['path']));
 
             if (null !== $file) {
                 continue;

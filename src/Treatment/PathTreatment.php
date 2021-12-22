@@ -22,8 +22,6 @@ use Berlioz\HtmlSelector\HtmlSelector;
 
 class PathTreatment implements TreatmentInterface
 {
-    use PathTreatmentTrait;
-
     private HtmlSelector $htmlSelector;
 
     public function __construct()
@@ -83,7 +81,7 @@ class PathTreatment implements TreatmentInterface
             $absolutePath = $linkedFile->getPath() . ($anchor ?? '');
         }
 
-        return $this->resolveRelativePath('/' . $page->getPath(), '/' . $absolutePath);
+        return ltrim(b_resolve_relative_path($page->getPath(), '/' . $absolutePath), '/');
     }
 
     /**
@@ -115,6 +113,6 @@ class PathTreatment implements TreatmentInterface
             $path .= '#' . $url['fragment'];
         }
 
-        return $this->resolveAbsolutePath($file->getFilename(), $path);
+        return ltrim(b_resolve_absolute_path('/' . $file->getFilename(), $path), '/');
     }
 }

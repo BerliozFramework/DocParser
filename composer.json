@@ -24,6 +24,7 @@
   "require": {
     "php": "^8.0",
     "ext-mbstring": "*",
+    "berlioz/helpers": "^1.5",
     "berlioz/html-selector": "^2.0",
     "berlioz/http-message": "^2.0",
     "league/flysystem": "^2.0"
