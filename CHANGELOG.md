@@ -5,6 +5,10 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 ## [v2.0.0-beta2] - In progress
 
+### Changed
+
+- Uses path resolution from `berlioz/helpers` package instead of internal functions
+
 ### Fixed
 
 - Anchors not kept in path resolution
