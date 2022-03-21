@@ -8,6 +8,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 ### Changed
 
 - Uses path resolution from `berlioz/helpers` package instead of internal functions
+- Minimum compatibility version with `league/commonmark` to  2.2
 
 ### Fixed
 

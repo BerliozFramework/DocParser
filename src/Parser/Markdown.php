@@ -89,7 +89,7 @@ class Markdown implements ParserInterface
     {
         try {
             $stream = new MemoryStream();
-            $stream->write($this->markdownConverter->convertToHtml($src)->getContent());
+            $stream->write($this->markdownConverter->convert($src)->getContent());
 
             $page =
                 new Page(
