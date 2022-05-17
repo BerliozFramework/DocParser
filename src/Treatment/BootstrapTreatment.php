@@ -16,7 +16,6 @@ namespace Berlioz\DocParser\Treatment;
 
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\Page;
-use Berlioz\DocParser\DocGenerator;
 use Berlioz\HtmlSelector\Exception\HtmlSelectorException;
 use Berlioz\HtmlSelector\HtmlSelector;
 
