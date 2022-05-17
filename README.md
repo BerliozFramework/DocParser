@@ -50,7 +50,8 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 
 $version = '1.0';
 
-$docGenerator = new DocGenerator(new Markdown());
+$docGenerator = new DocGenerator();
+$docGenerator->addParser(new Markdown());
 $documentation =
     $docGenerator->handle(
         $version,
@@ -217,7 +218,8 @@ $cacheFilesystem = new Filesystem(new LocalFilesystemAdapter('/path-of-project/c
 $docCacheGenerator = new DocCacheGenerator($cacheFilesystem);
 
 if (null === ($documentation = $docCacheGenerator->get($version))) {
-    $docGenerator = new DocGenerator(new Markdown());
+    $docGenerator = new DocGenerator();
+    $docGenerator->addParser(new Markdown());
     $documentation =
         $docGenerator->handle(
             $version,
