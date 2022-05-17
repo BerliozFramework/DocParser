@@ -16,50 +16,49 @@ namespace Berlioz\DocParser\Parser;
 
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Exception\ParserException;
-use Berlioz\DocParser\Parser\CommonMark\IndexExtension;
 use Berlioz\Http\Message\Stream\MemoryStream;
 use DateTimeImmutable;
 use Exception;
+use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\Environment;
-use League\CommonMark\Environment\EnvironmentInterface;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
+use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
+use League\CommonMark\Extension\FrontMatter\Output\RenderedContentWithFrontMatter;
 use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
 use League\Flysystem\FileAttributes;
 
 class Markdown implements ParserInterface
 {
-    private MarkdownConverter $markdownConverter;
-    private IndexExtension $indexExtension;
+    private ConverterInterface $converter;
 
     /**
      * Markdown constructor.
      *
      * @param array $config
-     * @param EnvironmentInterface|null $environment
+     * @param ConverterInterface|null $converter
      */
-    public function __construct(array $config = [], ?EnvironmentInterface $environment = null)
+    public function __construct(array $config = [], ?ConverterInterface $converter = null)
     {
-        if (null === $environment) {
+        if (null === $converter) {
             $environment = new Environment($config);
             $environment->addExtension(new GithubFlavoredMarkdownExtension());
+            $environment->addExtension(new CommonMarkCoreExtension());
+            $environment->addExtension(new FrontMatterExtension());
+            $converter = new MarkdownConverter($environment);
         }
 
-        // Add default index extension
-        $environment->addExtension(new CommonMarkCoreExtension());
-        $environment->addExtension($this->indexExtension = new IndexExtension());
-
-        $this->markdownConverter = new MarkdownConverter($environment);
+        $this->converter = $converter;
     }
 
     /**
      * Get CommonMark converter.
      *
-     * @return MarkdownConverter
+     * @return ConverterInterface
      */
-    public function getMarkdownConverter(): MarkdownConverter
+    public function getConverter(): ConverterInterface
     {
-        return $this->markdownConverter;
+        return $this->converter;
     }
 
     ////////////////////////
@@ -88,8 +87,10 @@ class Markdown implements ParserInterface
     public function parse(string $src, FileAttributes $fileAttributes): ?Page
     {
         try {
+            $result = $this->converter->convert($src);
+
             $stream = new MemoryStream();
-            $stream->write($this->markdownConverter->convert($src)->getContent());
+            $stream->write($result->getContent());
 
             $page =
                 new Page(
@@ -100,7 +101,9 @@ class Markdown implements ParserInterface
                         (new DateTimeImmutable())->setTimestamp($fileAttributes->lastModified()) : null
                 );
 
-            $page->setMetas($this->indexExtension->getIndex());
+            if ($result instanceof RenderedContentWithFrontMatter) {
+                $page->setMetas((array)$result->getFrontMatter());
+            }
 
             return $page;
         } catch (Exception $e) {

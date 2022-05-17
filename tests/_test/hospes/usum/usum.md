@@ -1,8 +1,10 @@
-```index
+---
 title: Usum gratulor
 slug: usum-gratular
-breadcrumb: Hospes; Usum grat.
-```
+breadcrumb:
+  - Hospes
+  - Usum grat.
+---
 
 # Usum gratulor aera ferre ne veri flexit
 

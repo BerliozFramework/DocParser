@@ -1,3 +1,12 @@
+---
+title: Website title
+slug: index
+breadcrumb:
+  - Website
+summary-order: 1
+summary-visible: true
+---
+
 # Aliter et nisi anima
 
 ## Illa ubi epulis contendere ligavit Aurora satum
@@ -48,11 +57,3 @@ semifer quae Peleus Saturnia caput, fuit matrona?
 Quid abeunt est. Ore sine tum, amans operisque putares, animo haec Iphitiden
 meae. Atlantiades spectentque quis, borean iactatis alimenta Aeacides potes, et
 caput. Est quod ego, nam inquit iamque ore Pergama lacus: tale.
-
-```index
-title: Website title
-slug: index
-breadcrumb: Website
-summary-order: 1
-summary-visible: true
-```

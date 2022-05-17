@@ -52,17 +52,17 @@ class MarkdownTest extends TestCase
         );
         $page = $this->getParser()->parse(
             <<<EOF
+---
+title: Page title
+slug: page
+summary-visible: false
+---
+
 # Title H1
 
 ## Title H2
 
 Content
-
-```index
-title: Page title
-slug: page
-summary-visible: false
-```
 EOF,
             $fileAttributes
         );

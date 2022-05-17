@@ -53,7 +53,7 @@ class DocSummary extends PageSummary
 
         // Summary order
         $summaryOrder = $page->getMeta('summary-order', '');
-        $summaryOrder = explode(';', (string)$summaryOrder);
+        !is_array($summaryOrder) && $summaryOrder = explode(';', (string)$summaryOrder);
         array_walk($summaryOrder, fn(&$value) => $value = (int)trim($value));
         array_walk($summaryOrder, fn(&$value) => $value = empty($value) ? null : $value);
         $summaryOrder = array_pad($summaryOrder, 0 - $nbEntries, null);
@@ -125,7 +125,7 @@ class DocSummary extends PageSummary
             return null;
         }
 
-        $breadcrumb = explode(';', $breadcrumb);
+        !is_array($breadcrumb) && $breadcrumb = explode(';', $breadcrumb);
         $breadcrumb = $this->filterBreadcrumb($breadcrumb);
 
         if (empty($breadcrumb)) {

@@ -1,7 +1,8 @@
-```index
-breadcrumb: Hospes
+---
+breadcrumb:
+  - Hospes
 slug: hôspés
-```
+---
 
 # Haec hospes si carent durastis
 

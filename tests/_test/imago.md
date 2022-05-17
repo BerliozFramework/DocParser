@@ -1,7 +1,8 @@
-```index
+---
 title: Title of page
 slug: images
-```
+---
+
 # Imago Iuppiter sanguine ingeminat coiere iaculo vivaque
 
 ## Externasque vertet
