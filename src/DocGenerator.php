@@ -28,8 +28,8 @@ use Berlioz\DocParser\Treatment\TitleTreatment;
 use Berlioz\DocParser\Treatment\TreatmentInterface;
 use DateTimeImmutable;
 use League\Flysystem\FileAttributes;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemOperator;
 use League\Flysystem\FilesystemReader;
 use League\Flysystem\StorageAttributes;
 use League\Flysystem\Visibility;
@@ -116,13 +116,13 @@ class DocGenerator
      * Handle.
      *
      * @param string $version
-     * @param Filesystem $filesystem
+     * @param FilesystemOperator $filesystem
      * @param string $location
      *
      * @return Documentation
      * @throws DocParserException
      */
-    public function handle(string $version, Filesystem $filesystem, string $location = '/'): Documentation
+    public function handle(string $version, FilesystemOperator $filesystem, string $location = '/'): Documentation
     {
         try {
             $documentation = new Documentation($version);
@@ -177,7 +177,7 @@ class DocGenerator
     /**
      * Handle file.
      *
-     * @param Filesystem $filesystem
+     * @param FilesystemOperator $filesystem
      * @param FileAttributes $fileAttributes
      *
      * @return FileInterface
@@ -185,7 +185,7 @@ class DocGenerator
      * @throws ParserException
      */
     protected function handleFile(
-        Filesystem $filesystem,
+        FilesystemOperator $filesystem,
         FileAttributes $fileAttributes
     ): FileInterface {
         // Parser do not accept file? Raw file

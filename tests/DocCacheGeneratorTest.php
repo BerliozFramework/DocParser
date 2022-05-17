@@ -73,4 +73,24 @@ class DocCacheGeneratorTest extends TestCase
             $this->assertNotNull($documentationFromCache->getFiles()->findByFilename($file->getFilename()));
         }
     }
+
+    public function testPrefix()
+    {
+        $file = new RawFile(
+            fopen($filename = __DIR__ . '/_test/assets/anomaly.jpg', 'r'),
+            'assets/anomaly.jpg',
+            'image/jpg',
+            (new DateTimeImmutable())->setTimestamp(filemtime($filename))
+        );
+
+        $adapter = new InMemoryFilesystemAdapter();
+        $filesystem = new Filesystem($adapter);
+        $docCacheGenerator = new DocCacheGenerator($filesystem, '/my/prefix');
+
+        $docCacheGenerator->saveFile($file);
+        $fileCacheName = $docCacheGenerator->getFileCacheName($file);
+
+        $this->assertEquals('/my/prefix/4b/4b132a542f71168cae423e7f39fe119f', $fileCacheName);
+        $this->assertTrue($filesystem->fileExists($fileCacheName));
+    }
 }

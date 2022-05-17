@@ -16,8 +16,8 @@ namespace Berlioz\DocParser;
 
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemException;
+use League\Flysystem\FilesystemOperator;
 use Throwable;
 
 class DocCacheGenerator
@@ -25,10 +25,13 @@ class DocCacheGenerator
     /**
      * DocCacheGenerator constructor.
      *
-     * @param Filesystem $filesystem
+     * @param FilesystemOperator $filesystem
+     * @param string $prefix
      */
-    public function __construct(protected Filesystem $filesystem)
-    {
+    public function __construct(
+        protected FilesystemOperator $filesystem,
+        protected string $prefix = '',
+    ) {
     }
 
     /**
@@ -52,7 +55,7 @@ class DocCacheGenerator
      */
     public function getDocCacheName(string $version): string
     {
-        return $this->getHashFilename(md5($version));
+        return rtrim($this->prefix, '/') . '/' . ltrim($this->getHashFilename(md5($version)), '/');
     }
 
     /**
@@ -64,7 +67,7 @@ class DocCacheGenerator
      */
     public function getFileCacheName(FileInterface $file): string
     {
-        return $this->getHashFilename($file->getHash());
+        return rtrim($this->prefix, '/') . '/' . ltrim($this->getHashFilename($file->getHash()), '/');
     }
 
     /////////////////////
