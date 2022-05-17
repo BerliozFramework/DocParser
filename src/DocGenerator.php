@@ -188,18 +188,22 @@ class DocGenerator
         FilesystemOperator $filesystem,
         FileAttributes $fileAttributes
     ): FileInterface {
-        // Parser do not accept file? Raw file
-        if (!$this->parserAcceptFile($fileAttributes)) {
-            return
-                new RawFile(
-                    $filesystem->readStream($fileAttributes->path()),
-                    $fileAttributes->path(),
-                    $fileAttributes->mimeType(),
-                    $fileAttributes->lastModified() ?
-                        (new DateTimeImmutable())->setTimestamp($fileAttributes->lastModified()) : null
-                );
+        // Parser accept file?
+        if (true === $this->parserAcceptFile($fileAttributes)) {
+            $file = $this->parser->parse($filesystem->read($fileAttributes->path()), $fileAttributes);
+
+            if (null !== $file) {
+                return $file;
+            }
         }
 
-        return $this->parser->parse($filesystem->read($fileAttributes->path()), $fileAttributes);
+        return
+            new RawFile(
+                $filesystem->readStream($fileAttributes->path()),
+                $fileAttributes->path(),
+                $fileAttributes->mimeType(),
+                $fileAttributes->lastModified() ?
+                    (new DateTimeImmutable())->setTimestamp($fileAttributes->lastModified()) : null
+            );
     }
 }

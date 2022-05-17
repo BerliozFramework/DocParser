@@ -44,8 +44,8 @@ interface ParserInterface
      * @param string $src Source
      * @param FileAttributes $fileAttributes
      *
-     * @return FileInterface
+     * @return FileInterface|null
      * @throws ParserException
      */
-    public function parse(string $src, FileAttributes $fileAttributes): FileInterface;
+    public function parse(string $src, FileAttributes $fileAttributes): ?FileInterface;
 }

@@ -78,7 +78,7 @@ class reStructuredText implements ParserInterface
     /**
      * @inheritDoc
      */
-    public function parse(string $src, FileAttributes $fileAttributes): Page
+    public function parse(string $src, FileAttributes $fileAttributes): ?Page
     {
         try {
             $rstFile = $this->rstParser->parse($src);

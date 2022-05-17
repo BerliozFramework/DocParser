@@ -85,7 +85,7 @@ class Markdown implements ParserInterface
     /**
      * @inheritDoc
      */
-    public function parse(string $src, FileAttributes $fileAttributes): Page
+    public function parse(string $src, FileAttributes $fileAttributes): ?Page
     {
         try {
             $stream = new MemoryStream();
