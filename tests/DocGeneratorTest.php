@@ -27,7 +27,8 @@ class DocGeneratorTest extends TestCase
         $adapter = new LocalFilesystemAdapter(realpath(__DIR__ . '/_test'));
         $filesystem = new Filesystem($adapter);
 
-        $generator = new DocGenerator(new Markdown());
+        $generator = new DocGenerator();
+        $generator->addParser(new Markdown());
         $documentation = $generator->handle($docVersion = 'current', $filesystem);
 
         $this->assertEquals($docVersion, $documentation->getVersion());

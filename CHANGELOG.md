@@ -13,6 +13,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 - Use `FilesystemOperator` interface instead of `Filesystem` class
 - Parser can return NULL if it does not accept file
+- `DocGenerator` accept multiple parser
 
 ## [v2.0.0-beta2] - 2022-03-21
 

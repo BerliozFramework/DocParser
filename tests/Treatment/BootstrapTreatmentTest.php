@@ -20,7 +20,7 @@ class BootstrapTreatmentTest extends AbstractTestCase
 {
     public function testDoBootstrapTreatment()
     {
-        $bootstrapTreatment = new BootstrapTreatment($this->getDocGenerator());
+        $bootstrapTreatment = new BootstrapTreatment();
         $documentation = $this->getDocumentation();
 
         /** @var Page $page */

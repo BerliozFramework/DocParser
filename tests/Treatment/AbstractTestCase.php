@@ -29,7 +29,8 @@ abstract class AbstractTestCase extends TestCase
             return $this->docGenerator;
         }
 
-        $this->docGenerator = new FakeDocGenerator(new Markdown());
+        $this->docGenerator = new FakeDocGenerator();
+        $this->docGenerator->addParser(new Markdown());
 
         return $this->docGenerator;
     }

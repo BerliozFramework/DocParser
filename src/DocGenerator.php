@@ -37,17 +37,16 @@ use Throwable;
 
 class DocGenerator
 {
+    protected array $parsers = [];
     protected array $treatments = [];
 
     /**
      * DocGenerator constructor.
      *
-     * @param ParserInterface $parser
      * @param array $config
      */
     public function __construct(
-        protected ParserInterface $parser,
-        protected array $config = []
+        protected array $config = [],
     ) {
         $this->addTreatment(new PathTreatment(), 10);
         $this->addTreatment(new TitleTreatment($this), 20);
@@ -69,6 +68,21 @@ class DocGenerator
     }
 
     /**
+     * Add parser.
+     *
+     * @param ParserInterface $parser
+     * @param int $priority
+     *
+     * @return static
+     */
+    public function addParser(ParserInterface $parser, int $priority = 100): static
+    {
+        $this->parsers[$priority][] = $parser;
+
+        return $this;
+    }
+
+    /**
      * Add treatment.
      *
      * @param TreatmentInterface $treatment
@@ -81,35 +95,6 @@ class DocGenerator
         $this->treatments[$priority][] = $treatment;
 
         return $this;
-    }
-
-    /**
-     * Parser accept file?
-     *
-     * @param FileAttributes $fileAttributes
-     *
-     * @return bool
-     */
-    private function parserAcceptFile(FileAttributes $fileAttributes): bool
-    {
-        $fileName = basename($fileAttributes->path());
-        $extensionPos = strripos(basename($fileAttributes->path()), '.');
-
-        if (false !== $extensionPos) {
-            if ($this->parser->acceptExtension(substr($fileName, $extensionPos + 1))) {
-                return true;
-            }
-        }
-
-        if (null === $fileAttributes->mimeType()) {
-            return false;
-        }
-
-        if ($this->parser->acceptExtension($fileAttributes->mimeType())) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -188,12 +173,16 @@ class DocGenerator
         FilesystemOperator $filesystem,
         FileAttributes $fileAttributes
     ): FileInterface {
-        // Parser accept file?
-        if (true === $this->parserAcceptFile($fileAttributes)) {
-            $file = $this->parser->parse($filesystem->read($fileAttributes->path()), $fileAttributes);
+        foreach ($this->parsers as $parsers) {
+            foreach ($parsers as $parser) {
+                // Parser accept file?
+                if (true === $this->parserAcceptFile($parser, $fileAttributes)) {
+                    $file = $parser->parse($filesystem->read($fileAttributes->path()), $fileAttributes);
 
-            if (null !== $file) {
-                return $file;
+                    if (null !== $file) {
+                        return $file;
+                    }
+                }
             }
         }
 
@@ -205,5 +194,35 @@ class DocGenerator
                 $fileAttributes->lastModified() ?
                     (new DateTimeImmutable())->setTimestamp($fileAttributes->lastModified()) : null
             );
+    }
+
+    /**
+     * Parser accept file?
+     *
+     * @param ParserInterface $parser
+     * @param FileAttributes $fileAttributes
+     *
+     * @return bool
+     */
+    private function parserAcceptFile(ParserInterface $parser, FileAttributes $fileAttributes): bool
+    {
+        $fileName = basename($fileAttributes->path());
+        $extensionPos = strripos(basename($fileAttributes->path()), '.');
+
+        if (false !== $extensionPos) {
+            if ($parser->acceptExtension(substr($fileName, $extensionPos + 1))) {
+                return true;
+            }
+        }
+
+        if (null === $fileAttributes->mimeType()) {
+            return false;
+        }
+
+        if ($parser->acceptExtension($fileAttributes->mimeType())) {
+            return true;
+        }
+
+        return false;
     }
 }

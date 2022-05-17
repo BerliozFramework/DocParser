@@ -38,7 +38,8 @@ trait TraitFakeDocumentation
         $adapter = new LocalFilesystemAdapter(realpath(__DIR__ . '/_test'));
         $filesystem = new Filesystem($adapter);
 
-        $generator = new DocGenerator(new Markdown());
+        $generator = new DocGenerator();
+        $generator->addParser(new Markdown());
         $this->documentation = $generator->handle('current', $filesystem);
 
         return $this->documentation;
