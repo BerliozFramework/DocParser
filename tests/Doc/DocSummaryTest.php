@@ -47,10 +47,13 @@ class DocSummaryTest extends TestCase
         $pageEntry = $docSummary->findByPage($page);
         $page2Entry = $docSummary->findByPage($page2);
         $this->assertEquals('My', $firstEntry->getTitle());
+        $this->assertNull($firstEntry->getPath());
         $this->assertNull($firstEntry->getOrder());
         $this->assertEquals('Breadcrumb', $pageEntry->getTitle());
+        $this->assertEquals('test', $pageEntry->getPath());
         $this->assertEquals(1, $pageEntry->getOrder());
         $this->assertEquals('Beautiful', $page2Entry->getTitle());
+        $this->assertEquals('test2', $page2Entry->getPath());
         $this->assertEquals(3, $page2Entry->getOrder());
     }
 
@@ -96,6 +99,7 @@ EOF
 
         $this->assertInstanceOf(Entry::class, $found = $docSummary->findByPage($page2));
         $this->assertEquals('My', $found->getTitle());
+        $this->assertEquals('test2', $found->getPath());
         $this->assertNull($docSummary->findByPage($page3));
     }
 }
