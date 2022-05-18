@@ -26,11 +26,13 @@ class DocCacheGenerator
      * DocCacheGenerator constructor.
      *
      * @param FilesystemOperator $filesystem
-     * @param string $prefix
+     * @param string $location
+     * @param array $config
      */
     public function __construct(
         protected FilesystemOperator $filesystem,
-        protected string $prefix = '',
+        protected string $location = '/',
+        protected array $config = [],
     ) {
     }
 
@@ -55,7 +57,7 @@ class DocCacheGenerator
      */
     public function getDocCacheName(string $version): string
     {
-        return rtrim($this->prefix, '/') . '/' . ltrim($this->getHashFilename(md5($version)), '/');
+        return rtrim($this->location, '/') . '/' . ltrim($this->getHashFilename(md5($version)), '/');
     }
 
     /**
@@ -67,7 +69,7 @@ class DocCacheGenerator
      */
     public function getFileCacheName(FileInterface $file): string
     {
-        return rtrim($this->prefix, '/') . '/' . ltrim($this->getHashFilename($file->getHash()), '/');
+        return rtrim($this->location, '/') . '/' . ltrim($this->getHashFilename($file->getHash()), '/');
     }
 
     /////////////////////
@@ -120,7 +122,11 @@ class DocCacheGenerator
             $this->saveFile($file);
         }
 
-        $this->filesystem->write($this->getDocCacheName($documentation->getVersion()), serialize($documentation));
+        $this->filesystem->write(
+            $this->getDocCacheName($documentation->getVersion()),
+            serialize($documentation),
+            $this->config,
+        );
     }
 
     ////////////
@@ -148,6 +154,10 @@ class DocCacheGenerator
      */
     public function saveFile(FileInterface $file): void
     {
-        $this->filesystem->writeStream($this->getFileCacheName($file), $file->getStream());
+        $this->filesystem->writeStream(
+            $this->getFileCacheName($file),
+            $file->getStream(),
+            $this->config,
+        );
     }
 }
