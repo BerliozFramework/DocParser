@@ -19,8 +19,6 @@
       "Berlioz\\DocParser\\Tests\\": "tests/"
     }
   },
-  "prefer-stable": true,
-  "minimum-stability": "beta",
   "require": {
     "php": "^8.0",
     "ext-mbstring": "*",
