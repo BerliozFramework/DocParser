@@ -123,7 +123,7 @@ class Documentation
 
         if ($file instanceof Page) {
             $summaryEntry = $this->getSummary()->findByPage($file);
-            $summaryEntry?->setActive(true, true);
+            $this->getSummary()->setActive($summaryEntry);
         }
 
         return $file;

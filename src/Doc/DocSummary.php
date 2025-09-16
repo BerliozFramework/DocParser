@@ -19,6 +19,32 @@ use Berlioz\DocParser\Doc\Summary\Entry;
 
 class DocSummary extends PageSummary
 {
+    private ?Entry $active = null;
+
+    /**
+     * Get active entry.
+     *
+     * @return Entry|null
+     */
+    public function getActive(): ?Entry
+    {
+        return $this->active;
+    }
+
+    /**
+     * Set active entry.
+     *
+     * @param Entry|null $entry
+     * @param bool $recursive
+     *
+     * @return void
+     */
+    public function setActive(?Entry $entry, bool $recursive = true): void
+    {
+        $entry?->setActive(true, $recursive);
+        $this->active = $entry;
+    }
+
     /**
      * Find by page.
      *

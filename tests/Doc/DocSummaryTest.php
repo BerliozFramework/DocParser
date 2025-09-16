@@ -71,7 +71,7 @@ summary-visible: true
 
 # Title of page
 EOF
-);
+        );
 
         $docSummary = new DocSummary();
         $docSummary->addPage($page);
@@ -101,5 +101,20 @@ EOF
         $this->assertEquals('My', $found->getTitle());
         $this->assertEquals('test2', $found->getPath());
         $this->assertNull($docSummary->findByPage($page3));
+    }
+
+    public function testSetActive()
+    {
+        $page = new Page(fopen('php://memory', 'r'), 'test.md');
+        $page->setTitle('My page');
+        $page->setMetas(['breadcrumb' => 'My; Breadcrumb']);
+
+        $docSummary = new DocSummary();
+        $docSummary->addPage($page);
+        $docSummary->setActive($expected = $docSummary->findByPage($page));
+
+        $this->assertInstanceOf(Entry::class, $docSummary->getActive());
+        $this->assertSame($expected, $docSummary->getActive());
+        $this->assertTrue($docSummary->getActive()?->isActive());
     }
 }
