@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/packagist/v/berlioz/doc-parser.svg?style=flat-square)](https://github.com/BerliozFramework/DocParser/releases)
 [![Software license](https://img.shields.io/github/license/BerliozFramework/DocParser.svg?style=flat-square)](https://github.com/BerliozFramework/DocParser/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/BerliozFramework/DocParser/Tests/main.svg?style=flat-square)](https://github.com/BerliozFramework/DocParser/actions/workflows/tests.yml?query=branch%3Amain)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/BerliozFramework/DocParser/tests.yml?branch=main&style=flat-square&label=tests)](https://github.com/BerliozFramework/DocParser/actions/workflows/tests.yml?query=branch%3Amain)
 [![Quality Grade](https://img.shields.io/codacy/grade/b52d4c86c2084349855d3ad24f2f8b7c/main.svg?style=flat-square)](https://www.codacy.com/manual/BerliozFramework/DocParser)
 [![Total Downloads](https://img.shields.io/packagist/dt/berlioz/doc-parser.svg?style=flat-square)](https://packagist.org/packages/berlioz/doc-parser)
 
