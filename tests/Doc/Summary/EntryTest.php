@@ -157,4 +157,30 @@ class EntryTest extends TestCase
 
         $this->assertEquals($mainEntry2, $mainEntry);
     }
+
+    public function testGetNext()
+    {
+        $mainEntry = new Entry('Main entry');
+        $mainEntry->addEntry($entry1 = new Entry('Entry 1'));
+        $mainEntry->addEntry($entry2 = new Entry('Entry 2'));
+        $mainEntry->addEntry($entry3 = new Entry('Entry 3'));
+
+        $this->assertSame($entry2, $entry1->getNext());
+        $this->assertSame($entry3, $entry2->getNext());
+        $this->assertNull($entry3->getNext());
+        $this->assertNull($mainEntry->getNext());
+    }
+
+    public function testGetPrev()
+    {
+        $mainEntry = new Entry('Main entry');
+        $mainEntry->addEntry($entry1 = new Entry('Entry 1'));
+        $mainEntry->addEntry($entry2 = new Entry('Entry 2'));
+        $mainEntry->addEntry($entry3 = new Entry('Entry 3'));
+
+        $this->assertNull($entry1->getPrev());
+        $this->assertSame($entry1, $entry2->getPrev());
+        $this->assertSame($entry2, $entry3->getPrev());
+        $this->assertNull($mainEntry->getPrev());
+    }
 }

@@ -269,4 +269,53 @@ class Entry implements EntryIterableInterface, SummaryInterface
     {
         $this->parent = $parent;
     }
+
+    /**
+     * Get previous entry.
+     *
+     * @return Entry|null
+     */
+    public function getPrev(): ?Entry
+    {
+        if (null === $this->getParent()) {
+            return null;
+        }
+        $prev = null;
+
+        foreach ($this->getParent()->getIterator() as $sibling) {
+            if ($sibling === $this) {
+                return $prev;
+            }
+
+            // Track last seen sibling until we hit $this
+            $prev = $sibling;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get next entry.
+     *
+     * @return Entry|null
+     */
+    public function getNext(): ?Entry
+    {
+        if (null === $this->getParent()) {
+            return null;
+        }
+        $found = false;
+
+        foreach ($this->getParent()->getIterator() as $sibling) {
+            if (true === $found) {
+                return $sibling;
+            }
+
+            if ($sibling === $this) {
+                $found = true;
+            }
+        }
+
+        return null;
+    }
 }
