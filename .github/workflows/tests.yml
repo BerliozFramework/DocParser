@@ -1,37 +1,43 @@
 name: Tests
 
 on:
-    push: ~
+    push:
+        branches:
+            - main
+            - '*.x'
     pull_request: ~
+    schedule:
+        - cron: '0 0 * * *'
 
 jobs:
     phpunit:
-        name: PHPUnit on ${{ matrix.php-versions }} ${{ matrix.composer-flags }}
         runs-on: ubuntu-latest
-        continue-on-error: ${{ !matrix.stable }}
+
         strategy:
+            fail-fast: false
             matrix:
-                php-versions: ['8.0', '8.1', '8.2', '8.3', '8.4']
-                stable: [true]
-                coverage: [true]
-                composer-flags: ['']
+                php-versions: [ '8.0', '8.1', '8.2', '8.3', '8.4', '8.5' ]
+                stability: [ 'prefer-lowest', 'prefer-stable' ]
+
+        name: PHPUnit on PHP ${{ matrix.php-versions }} - ${{ matrix.stability }}
+
+        continue-on-error: ${{ matrix.stability != 'prefer-stable' }}
 
         steps:
-            - uses: actions/checkout@v2
-              with:
-                fetch-depth: 0
+            - name: 'Checkout code'
+              uses: actions/checkout@v4
 
-            - uses: shivammathur/setup-php@v2
+            - name: 'Setup PHP'
+              uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php-versions }}
-                  extensions: curl, mbstring
-                  coverage: xdebug
+                  extensions: fileinfo, intl, mbstring, curl
+                  ini-values: error_reporting=E_ALL
                   tools: composer:v2
+                  coverage: xdebug
 
-            - run: composer update --no-progress ${{ matrix.composer-flags }}
+            - name: 'Install dependencies'
+              run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
-            - run: vendor/bin/phpunit --no-coverage
-              if: ${{ !matrix.coverage }}
-
-            - run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
-              if: ${{ matrix.coverage }}
+            - name: 'Execute tests'
+              run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
