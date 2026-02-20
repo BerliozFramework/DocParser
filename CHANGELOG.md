@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a Changelog](http://keepachangelog.com/).
 
+## [v2.1.0] - 2025-09-20
+
+### Added
+
+- Compatibility with `berlioz/http-message` ^3.0
+- Compatibility with `berlioz/http-selector` ^3.0
+- Compatibility with `league/flysystem` ^3.0
+
 ## [v2.0.0] - 2025-09-16
 
 ### Added
