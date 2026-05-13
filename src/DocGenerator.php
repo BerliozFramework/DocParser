@@ -219,7 +219,7 @@ class DocGenerator
             return false;
         }
 
-        if ($parser->acceptExtension($fileAttributes->mimeType())) {
+        if ($parser->acceptMime($fileAttributes->mimeType())) {
             return true;
         }
 

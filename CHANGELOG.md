@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file. This project adheres
 to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+### Fixed
+
+- Fix `DocGenerator::parserAcceptFile()` calling `acceptExtension()` instead of `acceptMime()` for MIME type fallback
+
 ## [v2.1.0] - 2025-09-20
 
 ### Added

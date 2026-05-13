@@ -16,6 +16,8 @@ use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Doc\File\RawFile;
 use Berlioz\DocParser\DocGenerator;
 use Berlioz\DocParser\Parser\Markdown;
+use Berlioz\DocParser\Parser\ParserInterface;
+use League\Flysystem\FileAttributes;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
@@ -39,5 +41,33 @@ class DocGeneratorTest extends TestCase
         $this->assertInstanceOf(Page::class, $page);
         $this->assertInstanceOf(RawFile::class, $rawFile = $documentation->handle('assets/anomaly.jpg'));
         $this->assertNotInstanceOf(Page::class, $rawFile);
+    }
+
+    public function testParserAcceptFileFallsBackToMime()
+    {
+        $parser = $this->createMock(ParserInterface::class);
+        $parser->method('acceptExtension')->willReturn(false);
+        $parser->method('acceptMime')->willReturnCallback(
+            fn(string $mime) => $mime === 'text/markdown'
+        );
+
+        $generator = new DocGenerator();
+        $generator->addParser($parser);
+
+        // Use reflection to test the private parserAcceptFile method
+        $method = new \ReflectionMethod($generator, 'parserAcceptFile');
+        $method->setAccessible(true);
+
+        // File with no extension but with a matching MIME type
+        $fileAttributes = new FileAttributes('readme', null, null, null, 'text/markdown');
+        $this->assertTrue($method->invoke($generator, $parser, $fileAttributes));
+
+        // File with no extension and non-matching MIME type
+        $fileAttributes = new FileAttributes('readme', null, null, null, 'text/plain');
+        $this->assertFalse($method->invoke($generator, $parser, $fileAttributes));
+
+        // File with no extension and no MIME type
+        $fileAttributes = new FileAttributes('readme');
+        $this->assertFalse($method->invoke($generator, $parser, $fileAttributes));
     }
 }
