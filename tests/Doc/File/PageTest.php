@@ -78,6 +78,22 @@ class PageTest extends TestCase
         $this->assertEquals('_test/%2Ffoo', $page->getPath());
     }
 
+    public function testGetPathEncodesDirectorySegments()
+    {
+        $page = new Page(
+            fopen('php://memory', 'r+'),
+            'my directory/sub dir/page.md',
+            'text/markdown'
+        );
+
+        // Both dirname segments and slug should be encoded
+        $this->assertEquals('my+directory/sub+dir/page', $page->getPath());
+
+        // With a slug containing special chars
+        $page->setMetas(['slug' => 'my page']);
+        $this->assertEquals('my+directory/sub+dir/my+page', $page->getPath());
+    }
+
     public function testMetas()
     {
         $page = $this->getPage();
