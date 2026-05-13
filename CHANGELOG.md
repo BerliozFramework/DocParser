@@ -7,6 +7,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 ### Added
 
+- `DoctrineRst` parser based on `doctrine/rst-parser` as replacement for the deprecated `reStructuredText` parser
 - Optional `$errorHandler` callback to `DocCacheGenerator` for cache read failures instead of silently swallowing exceptions
 
 ### Deprecated
