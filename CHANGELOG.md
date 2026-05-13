@@ -18,6 +18,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 ### Changed
 
 - Improve docblocks: add `@var Entry[]` on `EntryIterable::$entries`, document `FileSet::normalizePath()` behavior
+- Rename `PageSummaryTreatment::getHeaderLevel()` to `getSummaryDepth()` with clarified docblock
 
 ### Fixed
 

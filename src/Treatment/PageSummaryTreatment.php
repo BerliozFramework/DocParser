@@ -58,7 +58,7 @@ class PageSummaryTreatment implements TreatmentInterface
         $entries = [];
         foreach ($headers as $header) {
             // Header level
-            $headerLevel = $this->getHeaderLevel($header);
+            $headerLevel = $this->getSummaryDepth($header);
 
             // Remove old parent
             for ($i = count($entries) - 1; $i >= 0; $i--) {
@@ -128,14 +128,17 @@ class PageSummaryTreatment implements TreatmentInterface
     }
 
     /**
-     * Get header level.
+     * Get summary nesting depth for a header element.
+     *
+     * Since h1 is excluded from page summaries, h2 becomes depth 1 (root),
+     * h3 becomes depth 2, etc.
      *
      * @param Query $element
      *
-     * @return int
+     * @return int Depth starting at 1 for h2
      * @throws HtmlSelectorException
      */
-    private function getHeaderLevel(Query $element): int
+    private function getSummaryDepth(Query $element): int
     {
         if ($element->is('h3')) {
             return 2;
