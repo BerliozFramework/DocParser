@@ -70,4 +70,20 @@ class DocGeneratorTest extends TestCase
         $fileAttributes = new FileAttributes('readme');
         $this->assertFalse($method->invoke($generator, $parser, $fileAttributes));
     }
+
+    public function testGetConfigDoesNotMutateInternalConfig()
+    {
+        $generator = new DocGenerator(['existing' => 'value']);
+
+        // Calling getConfig with a default should not store the default
+        $result = $generator->getConfig('non-existent', 'default-value');
+        $this->assertEquals('default-value', $result);
+
+        // Calling again without default should return null, not the previously passed default
+        $result = $generator->getConfig('non-existent');
+        $this->assertNull($result);
+
+        // Existing keys should still work
+        $this->assertEquals('value', $generator->getConfig('existing'));
+    }
 }

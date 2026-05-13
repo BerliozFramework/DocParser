@@ -64,7 +64,7 @@ class DocGenerator
      */
     public function getConfig(string $key, mixed $default = null): mixed
     {
-        return $this->config[$key] ??= $default;
+        return $this->config[$key] ?? $default;
     }
 
     /**
