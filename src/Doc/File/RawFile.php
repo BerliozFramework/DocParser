@@ -167,6 +167,8 @@ class RawFile implements FileInterface
             throw new RuntimeException('Unable to truncate contents of stream');
         }
 
+        rewind($this->stream);
+
         if (@fwrite($this->stream, $contents) === false) {
             throw new RuntimeException('Unable to write contents of stream');
         }

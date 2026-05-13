@@ -29,6 +29,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Fix `PageSummaryTreatment::makePageSummary()` not deduplicating pre-existing duplicate header ids
 - Fix `DocSummary::addPage()` crashing with `TypeError` when `summary-order` meta contains non-scalar values
 - Fix `Page::getPath()` not encoding directory segments (only slug was encoded)
+- Fix `RawFile::setContents()` not rewinding stream after `ftruncate`, causing NUL-byte corruption
 
 ## [v2.1.0] - 2026-02-20
 

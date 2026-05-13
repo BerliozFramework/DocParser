@@ -114,4 +114,21 @@ class RawFileTest extends TestCase
         $this->assertSame($rawFile->getContents(), $response->getBody()->getContents());
         $this->assertSame($rawFile->getStream(), $response->getBody()->detach());
     }
+
+    public function testSetContentsThenGetContentsAfterRead()
+    {
+        // Use a read-write memory stream
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, 'initial content');
+        $rawFile = new RawFile($stream, 'test.txt', 'text/plain');
+
+        // Read first (moves pointer to end)
+        $this->assertEquals('initial content', $rawFile->getContents());
+
+        // Now overwrite with new content
+        $rawFile->setContents('new content');
+
+        // getContents must return exactly the new content, no leading NUL bytes
+        $this->assertEquals('new content', $rawFile->getContents());
+    }
 }
