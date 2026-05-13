@@ -18,6 +18,7 @@ use ArrayIterator;
 
 trait EntryIterable
 {
+    /** @var Entry[] */
     protected array $entries = [];
 
     /**

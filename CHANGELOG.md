@@ -14,6 +14,10 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Dead code in `Entry::isVisible()` (null check on a bool property)
 - Redundant `in_array` host check in `ExternalLinkTreatment::isExternalLink()`
 
+### Changed
+
+- Improve docblocks: add `@var Entry[]` on `EntryIterable::$entries`, document `FileSet::normalizePath()` behavior
+
 ### Fixed
 
 - Fix `DocGenerator::parserAcceptFile()` calling `acceptExtension()` instead of `acceptMime()` for MIME type fallback

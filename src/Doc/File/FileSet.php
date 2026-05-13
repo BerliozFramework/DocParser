@@ -184,6 +184,10 @@ class FileSet implements IteratorAggregate, Countable
     /**
      * Normalize path.
      *
+     * Converts backslashes to forward slashes, strips leading slashes,
+     * and removes the fragment (anchor) portion if present, so that
+     * lookups like "page#section" match "page".
+     *
      * @param string $path
      *
      * @return string
