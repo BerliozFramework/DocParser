@@ -31,7 +31,7 @@ $ composer require berlioz/doc-parser
 To parse files, you need additional package:
 
 - For MarkDown files: `league/commonmark`
-- For reStructuredText files: `gregwar/rst`
+- For reStructuredText files: `doctrine/rst-parser`
 
 ## Usage
 
@@ -189,13 +189,16 @@ No path given to the entry, but an id `Entry::getId()` linked to the correspondi
 Two parser are available by default:
 
 - `Berlioz\DocParser\Parser\Markdown`: to parse MarkDown files, use `league/commonmark` package
-- `Berlioz\DocParser\Parser\reStructuredText`: to parse reStructuredText files, use `gregwar/rst` package
+- `Berlioz\DocParser\Parser\DoctrineRst`: to parse reStructuredText files, use `doctrine/rst-parser` package
+
+> **Note:** `Berlioz\DocParser\Parser\reStructuredText` is deprecated and will be removed in the next major version.
+> It relies on the unmaintained `gregwar/rst` package. Use `DoctrineRst` instead.
 
 You can also create your own parser, you need only to implement `Berlioz\DocParser\Parser\ParserInterface` interface.
 
 If you need to add an extension to a specific parser, a getter method is available to access to the original parser. Example for MarkDown parser: `\Berlioz\DocParser\Parser\Markdown::getCommonMarkConverter()`.
 
-You can also pass to the `Markdown` and `reStructuredText` constructors the same parameters that corresponding libraries.
+You can also pass to the `Markdown` and `DoctrineRst` constructors the same parameters that corresponding libraries.
 
 ### Cache
 
