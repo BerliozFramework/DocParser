@@ -13,6 +13,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 - Dead code in `Entry::isVisible()` (null check on a bool property)
 - Redundant `in_array` host check in `ExternalLinkTreatment::isExternalLink()`
+- Unused `$ids` variable in `PageSummaryTreatment::makePageSummary()`
 
 ### Changed
 
@@ -24,6 +25,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Fix `DocIntegrity::check()` silently dropping errors from subsequent pages due to `+=` on numeric arrays
 - Fix `DocGenerator::getConfig()` mutating internal config array when returning default values (`??=` replaced by `??`)
 - Fix `ExternalLinkTreatment::doExternalLinksTreatment()` calling `setContents()` inside the loop instead of once after
+- Fix `PageSummaryTreatment::makePageSummary()` not deduplicating pre-existing duplicate header ids
 
 ## [v2.1.0] - 2026-02-20
 

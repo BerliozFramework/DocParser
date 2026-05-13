@@ -53,7 +53,6 @@ class PageSummaryTreatment implements TreatmentInterface
     {
         $summary = $page->getSummary();
         $query = $this->htmlSelector->query($page->getContents());
-        $ids = [];
         $headers = $query->find(':header:not(h1)');
 
         $entries = [];
@@ -68,29 +67,28 @@ class PageSummaryTreatment implements TreatmentInterface
                 }
             }
 
-            // Get id of header
-            if (null === ($id = $header->attr('id')) || in_array($id, $ids)) {
-                if (null === $id) {
-                    $id = '';
-                    foreach ($entries as $entry) {
-                        /** @var Entry $entry */
-                        $entry = $entry['entry'];
-                        $id .= $this->prepareId($entry->getTitle()) . '-';
-                    }
-                    $id .= $this->prepareId($header->text());
+            // Get or generate id for header
+            $id = $header->attr('id');
+            if (null === $id) {
+                $id = '';
+                foreach ($entries as $entry) {
+                    /** @var Entry $entry */
+                    $entry = $entry['entry'];
+                    $id .= $this->prepareId($entry->getTitle()) . '-';
                 }
-
-                // Find new id
-                $idPattern = $id;
-                $i = 1;
-                while ($query->find(sprintf('[id="%s"]', $id))->count() > 0) {
-                    $id = sprintf('%s-%d', $idPattern, $i);
-                    $i++;
-                }
-
-                // Set new id to header
-                $header->attr('id', $id);
+                $id .= $this->prepareId($header->text());
             }
+
+            // Deduplicate id if already present in the document
+            $idPattern = $id;
+            $i = 1;
+            while ($query->find(sprintf('[id="%s"]', $id))->count() > 0) {
+                $id = sprintf('%s-%d', $idPattern, $i);
+                $i++;
+            }
+
+            // Set id to header
+            $header->attr('id', $id);
 
             // Create summary entry
             $entry = new Entry($header->text(), $page->getPath());
