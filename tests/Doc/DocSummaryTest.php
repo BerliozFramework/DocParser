@@ -117,4 +117,24 @@ EOF
         $this->assertSame($expected, $docSummary->getActive());
         $this->assertTrue($docSummary->getActive()?->isActive());
     }
+
+    public function testAddPageWithNonScalarSummaryOrder()
+    {
+        $page = new Page(fopen('php://memory', 'r'), 'test.md');
+        $page->setTitle('My page');
+        $page->setMetas([
+            'breadcrumb' => 'Category; Sub',
+            'summary-order' => [['nested' => 'array'], 'not-a-number'],
+        ]);
+
+        $docSummary = new DocSummary();
+
+        // Should not throw a TypeError on non-scalar summary-order values
+        $docSummary->addPage($page);
+
+        $this->assertCount(1, $docSummary);
+        $entry = $docSummary->findByPage($page);
+        $this->assertInstanceOf(Entry::class, $entry);
+        $this->assertNull($entry->getOrder());
+    }
 }

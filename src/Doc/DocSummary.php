@@ -80,7 +80,7 @@ class DocSummary extends PageSummary
         // Summary order
         $summaryOrder = $page->getMeta('summary-order', '');
         !is_array($summaryOrder) && $summaryOrder = explode(';', (string)$summaryOrder);
-        array_walk($summaryOrder, fn(&$value) => $value = (int)trim($value));
+        array_walk($summaryOrder, fn(&$value) => $value = is_scalar($value) ? (int)trim((string)$value) : 0);
         array_walk($summaryOrder, fn(&$value) => $value = empty($value) ? null : $value);
         $summaryOrder = array_pad($summaryOrder, 0 - $nbEntries, null);
         $summaryOrder = array_slice($summaryOrder, 0, $nbEntries);

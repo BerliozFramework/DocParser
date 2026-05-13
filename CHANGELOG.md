@@ -27,6 +27,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Fix `DocGenerator::getConfig()` mutating internal config array when returning default values (`??=` replaced by `??`)
 - Fix `ExternalLinkTreatment::doExternalLinksTreatment()` calling `setContents()` inside the loop instead of once after
 - Fix `PageSummaryTreatment::makePageSummary()` not deduplicating pre-existing duplicate header ids
+- Fix `DocSummary::addPage()` crashing with `TypeError` when `summary-order` meta contains non-scalar values
 
 ## [v2.1.0] - 2026-02-20
 
