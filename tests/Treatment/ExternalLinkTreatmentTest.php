@@ -57,5 +57,9 @@ class ExternalLinkTreatmentTest extends AbstractTestCase
         $this->assertFalse($externalLinksTreatment->isExternalLink(':80/test'));
         $this->assertTrue($externalLinksTreatment->isExternalLink('//www.getberlioz.com'));
         $this->assertTrue($externalLinksTreatment->isExternalLink('//google.fr'));
+
+        // Malformed URLs should not be considered external
+        $this->assertFalse($externalLinksTreatment->isExternalLink(''));
+        $this->assertFalse($externalLinksTreatment->isExternalLink('#anchor'));
     }
 }

@@ -89,15 +89,15 @@ class ExternalLinkTreatment implements TreatmentInterface
      */
     public function isExternalLink(string $url): bool
     {
-        $url = parse_url($url);
+        $parsedUrl = parse_url($url);
 
         // Not a valid url
-        if (false === $url) {
+        if (false === $parsedUrl) {
             return false;
         }
 
         // Relative url
-        if (!isset($url['host'])) {
+        if (!isset($parsedUrl['host'])) {
             return false;
         }
 
@@ -106,19 +106,16 @@ class ExternalLinkTreatment implements TreatmentInterface
             if (str_starts_with($host, '.')) {
                 $hostLength = strlen($host);
 
-                if (substr(('.' . $url['host']), -$hostLength) === $host) {
+                if (substr(('.' . $parsedUrl['host']), -$hostLength) === $host) {
                     return false;
                 }
 
                 continue;
             }
 
-            if ($url['host'] === $host) {
+            if ($parsedUrl['host'] === $host) {
                 return false;
             }
-        }
-        if (in_array($url['host'], $this->docGenerator->getConfig('treatment.external-links.hosts', []))) {
-            return false;
         }
 
         return true;
