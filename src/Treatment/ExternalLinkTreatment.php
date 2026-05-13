@@ -62,6 +62,8 @@ class ExternalLinkTreatment implements TreatmentInterface
             return;
         }
 
+        $modified = false;
+
         foreach ($links as $link) {
             // Not an external link?
             if (!$this->isExternalLink($link->attr('href'))) {
@@ -70,12 +72,16 @@ class ExternalLinkTreatment implements TreatmentInterface
 
             if (false !== $this->docGenerator->getConfig('treatment.external-links.target')) {
                 $link->attr('target', $this->docGenerator->getConfig('treatment.external-links.target', '_blank'));
+                $modified = true;
             }
 
             if (false !== $this->docGenerator->getConfig('treatment.external-links.rel')) {
                 $link->attr('rel', $this->docGenerator->getConfig('treatment.external-links.rel', 'nofollow noopener'));
+                $modified = true;
             }
+        }
 
+        if ($modified) {
             $page->setContents($query->find('html > body')->html());
         }
     }
