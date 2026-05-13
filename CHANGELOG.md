@@ -8,6 +8,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 ### Fixed
 
 - Fix `DocGenerator::parserAcceptFile()` calling `acceptExtension()` instead of `acceptMime()` for MIME type fallback
+- Fix `DocIntegrity::check()` silently dropping errors from subsequent pages due to `+=` on numeric arrays
 
 ## [v2.1.0] - 2025-09-20
 

@@ -103,7 +103,7 @@ class DocIntegrity
         $errors = [];
 
         foreach ($documentation->getFiles(fn(FileInterface $file) => $file instanceof Page) as $page) {
-            $errors += $this->checkPage($documentation, $page);
+            array_push($errors, ...$this->checkPage($documentation, $page));
         }
 
         return $errors;
