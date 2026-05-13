@@ -27,6 +27,10 @@ use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Parser;
 use League\Flysystem\FileAttributes;
 
+/**
+ * @deprecated Use DoctrineRst instead. This parser relies on the unmaintained gregwar/rst package.
+ * @see DoctrineRst
+ */
 class reStructuredText implements ParserInterface
 {
     use TraitCastValue;
@@ -38,9 +42,15 @@ class reStructuredText implements ParserInterface
      *
      * @param Environment|null $environment
      * @param Kernel|null $kernel
+     *
+     * @deprecated Use DoctrineRst instead.
      */
     public function __construct(?Environment $environment = null, ?Kernel $kernel = null)
     {
+        trigger_error(
+            sprintf('Class "%s" is deprecated, use "%s" instead.', __CLASS__, DoctrineRst::class),
+            E_USER_DEPRECATED
+        );
         $this->rstParser = new Parser($environment, $kernel);
         $this->rstParser->registerDirective(new IndexDirective());
     }

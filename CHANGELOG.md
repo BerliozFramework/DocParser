@@ -9,6 +9,10 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 - Optional `$errorHandler` callback to `DocCacheGenerator` for cache read failures instead of silently swallowing exceptions
 
+### Deprecated
+
+- `reStructuredText` parser and associated `RST\IndexDirective`, `RST\IndexNode` classes; relies on the unmaintained `gregwar/rst` package — use `DoctrineRst` parser instead
+
 ### Removed
 
 - Dead code in `Entry::isVisible()` (null check on a bool property)

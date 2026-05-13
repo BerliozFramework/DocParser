@@ -16,6 +16,10 @@ namespace Berlioz\DocParser\Parser\RST;
 
 use Gregwar\RST\Nodes\Node;
 
+/**
+ * @deprecated Use \Berlioz\DocParser\Parser\DoctrineRst\IndexNode instead.
+ * @see \Berlioz\DocParser\Parser\DoctrineRst\IndexNode
+ */
 class IndexNode extends Node
 {
     public function render()

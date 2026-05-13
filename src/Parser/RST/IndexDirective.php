@@ -17,6 +17,10 @@ namespace Berlioz\DocParser\Parser\RST;
 use Gregwar\RST\Directive;
 use Gregwar\RST\Parser;
 
+/**
+ * @deprecated Use \Berlioz\DocParser\Parser\DoctrineRst\IndexDirective instead.
+ * @see \Berlioz\DocParser\Parser\DoctrineRst\IndexDirective
+ */
 class IndexDirective extends Directive
 {
     public function getName(): string
