@@ -20,6 +20,7 @@ use DateTimeImmutable;
 use League\Flysystem\Filesystem;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 class DocCacheGeneratorTest extends TestCase
 {
@@ -92,5 +93,36 @@ class DocCacheGeneratorTest extends TestCase
 
         $this->assertEquals('/my/prefix/4b/4b132a542f71168cae423e7f39fe119f', $fileCacheName);
         $this->assertTrue($filesystem->fileExists($fileCacheName));
+    }
+
+    public function testGetCorruptedCacheCallsErrorHandler()
+    {
+        $adapter = new InMemoryFilesystemAdapter();
+        $filesystem = new Filesystem($adapter);
+
+        // Write corrupted data to cache
+        $version = 'corrupted';
+        $cacheGenerator = new DocCacheGenerator($filesystem);
+        $cacheName = $cacheGenerator->getDocCacheName($version);
+        $filesystem->write($cacheName, 'not_a_valid_serialized_documentation');
+
+        // Without error handler: returns null silently
+        $result = $cacheGenerator->get($version);
+        $this->assertNull($result);
+
+        // With error handler: returns null but handler is called
+        $caughtException = null;
+        $cacheGeneratorWithHandler = new DocCacheGenerator(
+            $filesystem,
+            '/',
+            [],
+            function (Throwable $e) use (&$caughtException) {
+                $caughtException = $e;
+            }
+        );
+        $result = $cacheGeneratorWithHandler->get($version);
+
+        $this->assertNull($result);
+        $this->assertNotNull($caughtException);
     }
 }

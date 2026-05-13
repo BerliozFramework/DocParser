@@ -22,18 +22,24 @@ use Throwable;
 
 class DocCacheGenerator
 {
+    /** @var callable(Throwable): void|null */
+    protected $errorHandler;
+
     /**
      * DocCacheGenerator constructor.
      *
      * @param FilesystemOperator $filesystem
      * @param string $location
      * @param array $config
+     * @param callable(Throwable): void|null $errorHandler Called when cache read fails silently
      */
     public function __construct(
         protected FilesystemOperator $filesystem,
         protected string $location = '/',
         protected array $config = [],
+        ?callable $errorHandler = null,
     ) {
+        $this->errorHandler = $errorHandler;
     }
 
     /**
@@ -103,7 +109,11 @@ class DocCacheGenerator
             }
 
             return $documentation;
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
+            if (null !== $this->errorHandler) {
+                ($this->errorHandler)($exception);
+            }
+
             return null;
         }
     }

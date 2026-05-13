@@ -5,11 +5,18 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 ## [Unreleased]
 
+### Added
+
+- Optional `$errorHandler` callback to `DocCacheGenerator` for cache read failures instead of silently swallowing exceptions
+
+### Removed
+
+- Dead code in `Entry::isVisible()` (null check on a bool property)
+
 ### Fixed
 
 - Fix `DocGenerator::parserAcceptFile()` calling `acceptExtension()` instead of `acceptMime()` for MIME type fallback
 - Fix `DocIntegrity::check()` silently dropping errors from subsequent pages due to `+=` on numeric arrays
-- Remove dead code in `Entry::isVisible()` (null check on a bool property)
 
 ## [v2.1.0] - 2025-09-20
 
