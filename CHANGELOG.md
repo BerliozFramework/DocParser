@@ -1,14 +1,23 @@
-# Change Log
+# Changelog
 
-All notable changes to this project will be documented in this file. This project adheres
-to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a Changelog](http://keepachangelog.com/).
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.2.0] - 2026-05-13
 
 ### Added
 
 - `DoctrineRst` parser based on `doctrine/rst-parser` as replacement for the deprecated `reStructuredText` parser
 - Optional `$errorHandler` callback to `DocCacheGenerator` for cache read failures instead of silently swallowing exceptions
+
+### Changed
+
+- Improve docblocks: add `@var Entry[]` on `EntryIterable::$entries`, document `FileSet::normalizePath()` behavior
+- Rename `PageSummaryTreatment::getHeaderLevel()` to `getSummaryDepth()` with clarified docblock
 
 ### Deprecated
 
@@ -19,11 +28,6 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Dead code in `Entry::isVisible()` (null check on a bool property)
 - Redundant `in_array` host check in `ExternalLinkTreatment::isExternalLink()`
 - Unused `$ids` variable in `PageSummaryTreatment::makePageSummary()`
-
-### Changed
-
-- Improve docblocks: add `@var Entry[]` on `EntryIterable::$entries`, document `FileSet::normalizePath()` behavior
-- Rename `PageSummaryTreatment::getHeaderLevel()` to `getSummaryDepth()` with clarified docblock
 
 ### Fixed
 
@@ -37,7 +41,11 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Fix `RawFile::setContents()` not rewinding stream after `ftruncate`, causing NUL-byte corruption
 - Fix `DocGenerator` not sorting parsers and treatments by priority before execution
 
-## [v2.1.0] - 2026-02-20
+### Security
+
+- Bump minimum phpunit version to ^9.6.34
+
+## [2.1.0] - 2026-02-20
 
 ### Added
 
@@ -45,7 +53,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Compatibility with `berlioz/http-selector` ^3.0
 - Compatibility with `league/flysystem` ^3.0
 
-## [v2.0.0] - 2025-09-16
+## [2.0.0] - 2025-09-16
 
 ### Added
 
@@ -58,7 +66,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Markdown parser use `FrontMatterExtension` of `league/commonmark` package to get metadata
 - Markdown parser accept `ConverterInterface` instead of `EnvironmentInterface`
 
-## [v2.0.0-beta3] - 2022-05-17
+## [2.0.0-beta3] - 2022-05-17
 
 ### Added
 
@@ -70,7 +78,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Parser can return NULL if it does not accept file
 - `DocGenerator` accept multiple parser
 
-## [v2.0.0-beta2] - 2022-03-21
+## [2.0.0-beta2] - 2022-03-21
 
 ### Changed
 
@@ -81,7 +89,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 - Anchors not kept in path resolution
 
-## [v2.0.0-beta1] - 2021-09-03
+## [2.0.0-beta1] - 2021-09-03
 
 ### Changed
 
@@ -92,7 +100,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Strict types
 - PHP 8 refactoring
 
-## [v1.3.0] - 2021-09-02
+## [1.3.0] - 2021-09-02
 
 ### Changed
 
@@ -104,7 +112,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 - Tests with date time zone
 
-## [v1.2.1] - 2021-06-08
+## [1.2.1] - 2021-06-08
 
 ### Changed
 
@@ -114,32 +122,32 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 
 - Minimum compatibility for production
 
-## [v1.2.0] - 2021-06-01
+## [1.2.0] - 2021-06-01
 
 ### Changed
 
 - Bump minimum compatibility of `league/commonmark` to 1.6
 
-## [v1.1.1] - 2021-04-30
+## [1.1.1] - 2021-04-30
 
 ### Fixed
 
 - Cast order of summary to string to allow nested orders
 
-## [v1.1.0] - 2021-04-30
+## [1.1.0] - 2021-04-30
 
 ### Changed
 
 - Cast value of metas into boolean, integer and float if necessary
 
-## [v1.0.0] - 2020-12-01
+## [1.0.0] - 2020-12-01
 
 Stable version
 
-## [v0.2-alpha] - 2020-11-05
+## [0.2-alpha] - 2020-11-05
 
 Refactoring
 
-## [v0.1-alpha] - 2020-04-27
+## [0.1-alpha] - 2020-04-27
 
 Initial version
