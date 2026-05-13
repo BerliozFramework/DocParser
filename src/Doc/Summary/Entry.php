@@ -197,10 +197,6 @@ class Entry implements EntryIterableInterface, SummaryInterface
      */
     public function isVisible(): bool
     {
-        if (null === $this->visible) {
-            return true;
-        }
-
         return $this->visible;
     }
 
