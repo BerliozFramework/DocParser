@@ -30,6 +30,7 @@ to [Semantic Versioning](http://semver.org/). For change log format, use [Keep a
 - Fix `DocSummary::addPage()` crashing with `TypeError` when `summary-order` meta contains non-scalar values
 - Fix `Page::getPath()` not encoding directory segments (only slug was encoded)
 - Fix `RawFile::setContents()` not rewinding stream after `ftruncate`, causing NUL-byte corruption
+- Fix `DocGenerator` not sorting parsers and treatments by priority before execution
 
 ## [v2.1.0] - 2026-02-20
 

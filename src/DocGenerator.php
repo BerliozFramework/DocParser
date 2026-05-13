@@ -110,6 +110,7 @@ class DocGenerator
     public function handle(string $version, FilesystemOperator $filesystem, string $location = '/'): Documentation
     {
         try {
+            ksort($this->parsers);
             $documentation = new Documentation($version);
 
             $listing =
@@ -152,6 +153,8 @@ class DocGenerator
 
     protected function doTreatments(Documentation $documentation): void
     {
+        ksort($this->treatments);
+
         /** @var TreatmentInterface[] $treatments */
         array_walk_recursive(
             $this->treatments,

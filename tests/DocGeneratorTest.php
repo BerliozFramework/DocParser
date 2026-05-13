@@ -86,4 +86,39 @@ class DocGeneratorTest extends TestCase
         // Existing keys should still work
         $this->assertEquals('value', $generator->getConfig('existing'));
     }
+
+    public function testParsersRespectPriorityOrder()
+    {
+        // Parser A: low priority (200), accepts .md
+        $parserA = $this->createMock(ParserInterface::class);
+        $parserA->method('acceptExtension')->willReturnCallback(fn(string $ext) => $ext === 'md');
+        $parserA->method('acceptMime')->willReturn(false);
+        $parserA->method('parse')->willReturn(
+            new Page(fopen('php://memory', 'r+'), 'from-parser-a.md', 'text/html')
+        );
+
+        // Parser B: high priority (10), accepts .md, returns a different page
+        $parserB = $this->createMock(ParserInterface::class);
+        $parserB->method('acceptExtension')->willReturnCallback(fn(string $ext) => $ext === 'md');
+        $parserB->method('acceptMime')->willReturn(false);
+        $parserB->method('parse')->willReturn(
+            new Page(fopen('php://memory', 'r+'), 'from-parser-b.md', 'text/html')
+        );
+
+        // Add low priority first, then high priority — high should still win
+        $generator = new DocGenerator();
+        $generator->addParser($parserA, 200);
+        $generator->addParser($parserB, 10);
+
+        $adapter = new LocalFilesystemAdapter(realpath(__DIR__ . '/_test'));
+        $filesystem = new Filesystem($adapter);
+        $documentation = $generator->handle('test', $filesystem);
+
+        // Parser B (priority 10) should be used; all .md pages should have filename 'from-parser-b.md'
+        $pages = $documentation->getFiles()->getFiles(Page::class);
+        $this->assertNotEmpty($pages);
+        foreach ($pages as $page) {
+            $this->assertEquals('from-parser-b.md', $page->getFilename());
+        }
+    }
 }
