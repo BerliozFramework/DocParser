@@ -191,12 +191,9 @@ class Page extends RawFile
         $dirname = $dirname == '.' ? '' : $dirname;
         $path = str_replace('\\', '/', $dirname);
 
-        // Encode each path segment individually to preserve directory separators
-        if (!empty($path)) {
-            $path = implode('/', array_map('urlencode', explode('/', $path)));
-        }
-
-        return ltrim(sprintf('%s/%s', $path, urlencode($slug)), '/');
+        // Returns the canonical (decoded) path used as internal identifier.
+        // URL encoding is applied later, only when writing href/src attributes.
+        return ltrim(sprintf('%s/%s', $path, $slug), '/');
     }
 
     /**

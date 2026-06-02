@@ -65,7 +65,7 @@ class DocumentationTest extends TestCase
         $doc = $this->getFakeDocumentation();
 
         $this->assertInstanceOf(FileSet::class, $doc->getFiles());
-        $this->assertCount(11, $doc->getFiles());
+        $this->assertCount(13, $doc->getFiles());
 
         foreach ($doc->getFiles() as $file) {
             $this->assertInstanceOf(FileInterface::class, $file);
@@ -82,5 +82,25 @@ class DocumentationTest extends TestCase
         $query = (new HtmlSelector())->query($page->getContents())->find('a:contains(currere contemptrix)');
         $this->assertCount(1, $query);
         $this->assertEquals('../index#o-infecta-ossibus-ripa', $query->attr('href'));
+    }
+
+    public function testHandleWithSpaceInPathDecoded()
+    {
+        $doc = $this->getFakeDocumentation();
+
+        $page = $doc->handle('with space/my page');
+
+        $this->assertNotNull($page);
+        $this->assertEquals('with space/my page', $page->getPath());
+    }
+
+    public function testHandleWithSpaceInPathEncoded()
+    {
+        $doc = $this->getFakeDocumentation();
+
+        $page = $doc->handle('with%20space/my%20page');
+
+        $this->assertNotNull($page);
+        $this->assertEquals('with space/my page', $page->getPath());
     }
 }

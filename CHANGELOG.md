@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2026-06-02
+
+### Fixed
+
+- Fix page resolution failing for paths containing spaces (or other special characters): `Page::getPath()` now returns a canonical decoded path, `FileSet::normalizePath()` decodes incoming paths, and URL encoding is applied only when writing `href`/`src` attributes in `PathTreatment`
+
 ## [2.2.0] - 2026-05-13
 
 ### Added

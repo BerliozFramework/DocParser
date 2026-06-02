@@ -40,11 +40,11 @@ class PathTreatment implements TreatmentInterface
             $query = $this->htmlSelector->query($page->getContents());
 
             foreach ($query->find('[href]') as $link) {
-                $link->attr('href', $this->getPathResolved($link->attr('href'), $page, $documentation));
+                $link->attr('href', $this->encodePath($this->getPathResolved($link->attr('href'), $page, $documentation)));
             }
 
             foreach ($query->find('[src]') as $link) {
-                $link->attr('src', $this->getPathResolved($link->attr('src'), $page, $documentation));
+                $link->attr('src', $this->encodePath($this->getPathResolved($link->attr('src'), $page, $documentation)));
             }
 
             $page->setContents($query->find('html > body')->html());
@@ -82,6 +82,43 @@ class PathTreatment implements TreatmentInterface
         }
 
         return ltrim(b_resolve_relative_path($page->getPath(), '/' . $absolutePath), '/');
+    }
+
+    /**
+     * Encode a resolved path for use in a href/src attribute.
+     *
+     * Encodes each segment with rawurlencode while preserving the directory
+     * separators ('/') and the optional '#fragment'. Absolute URLs (with a
+     * scheme or host) and pure anchors are left untouched.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    private function encodePath(string $path): string
+    {
+        $url = parse_url($path);
+
+        // Leave absolute URLs (mailto:, http://, //host, ...) untouched.
+        if (false === $url || isset($url['scheme']) || isset($url['host'])) {
+            return $path;
+        }
+
+        // Leave pure anchors (e.g. "#section") untouched.
+        if (!isset($url['path'])) {
+            return $path;
+        }
+
+        $fragment = null;
+        if (str_contains($path, '#')) {
+            [$path, $fragment] = explode('#', $path, 2);
+        }
+
+        $leadingSlash = str_starts_with($path, '/') ? '/' : '';
+        $encoded = implode('/', array_map('rawurlencode', explode('/', ltrim($path, '/'))));
+        $encoded = $leadingSlash . $encoded;
+
+        return null !== $fragment ? $encoded . '#' . rawurlencode($fragment) : $encoded;
     }
 
     /**

@@ -75,10 +75,10 @@ class PageTest extends TestCase
         $this->assertEquals('_test/foo', $page->getPath());
 
         $page->setMetas(['slug' => '/foo']);
-        $this->assertEquals('_test/%2Ffoo', $page->getPath());
+        $this->assertEquals('_test//foo', $page->getPath());
     }
 
-    public function testGetPathEncodesDirectorySegments()
+    public function testGetPathKeepsDecodedSegments()
     {
         $page = new Page(
             fopen('php://memory', 'r+'),
@@ -86,12 +86,12 @@ class PageTest extends TestCase
             'text/markdown'
         );
 
-        // Both dirname segments and slug should be encoded
-        $this->assertEquals('my+directory/sub+dir/page', $page->getPath());
+        // The path is the canonical (decoded) identifier; no URL encoding here.
+        $this->assertEquals('my directory/sub dir/page', $page->getPath());
 
-        // With a slug containing special chars
+        // The slug is kept decoded as well.
         $page->setMetas(['slug' => 'my page']);
-        $this->assertEquals('my+directory/sub+dir/my+page', $page->getPath());
+        $this->assertEquals('my directory/sub dir/my page', $page->getPath());
     }
 
     public function testMetas()

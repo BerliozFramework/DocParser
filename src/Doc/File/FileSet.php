@@ -185,8 +185,10 @@ class FileSet implements IteratorAggregate, Countable
      * Normalize path.
      *
      * Converts backslashes to forward slashes, strips leading slashes,
-     * and removes the fragment (anchor) portion if present, so that
-     * lookups like "page#section" match "page".
+     * removes the fragment (anchor) portion if present, so that lookups
+     * like "page#section" match "page", and decodes percent-encoded
+     * characters so that an encoded path (e.g. "my%20page") matches the
+     * canonical decoded form returned by Page::getPath() (e.g. "my page").
      *
      * @param string $path
      *
@@ -197,9 +199,9 @@ class FileSet implements IteratorAggregate, Countable
         $path = ltrim(str_replace('\\', '/', $path), '/');
 
         if (str_contains($path, '#')) {
-            return explode('#', $path, 2)[0];
+            $path = explode('#', $path, 2)[0];
         }
 
-        return $path;
+        return rawurldecode($path);
     }
 }
