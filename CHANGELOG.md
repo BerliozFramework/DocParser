@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.2.1] - 2026-06-02
 
+### Changed
+
+- Bump minimum PHP version from 8.0 to 8.1 (required by `doctrine/rst-parser` transitive dependencies)
+
 ### Fixed
 
 - Fix page resolution failing for paths containing spaces (or other special characters): `Page::getPath()` now returns a canonical decoded path, `FileSet::normalizePath()` decodes incoming paths, and URL encoding is applied only when writing `href`/`src` attributes in `PathTreatment`
