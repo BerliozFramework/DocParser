@@ -150,6 +150,14 @@ class PathTreatment implements TreatmentInterface
             $path .= '#' . $url['fragment'];
         }
 
-        return ltrim(b_resolve_absolute_path('/' . $file->getFilename(), $path), '/');
+        $resolved = b_resolve_absolute_path('/' . $file->getFilename(), $path);
+
+        // Resolution can fail (e.g. too many "../" climbing above the root):
+        // leave the original path untouched in that case.
+        if (null === $resolved) {
+            return null;
+        }
+
+        return ltrim($resolved, '/');
     }
 }

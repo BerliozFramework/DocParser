@@ -12,8 +12,10 @@
 
 namespace Berlioz\DocParser\Tests\Treatment;
 
+use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\Page;
 use Berlioz\DocParser\Tests\TraitFakeDocumentation;
+use Berlioz\DocParser\Treatment\PathTreatment;
 use Berlioz\HtmlSelector\HtmlSelector;
 use PHPUnit\Framework\TestCase;
 
@@ -40,6 +42,24 @@ class PathTreatmentTest extends TestCase
         $home = $query->find('a:contains(home page)');
         $this->assertCount(1, $home);
         $this->assertEquals('../index', $home->attr('href'));
+    }
+
+    public function testLinkClimbingAboveRootIsKeptUnchanged()
+    {
+        $documentation = new Documentation('test');
+
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, '<a href="../../../../outside.md">Outside</a>');
+        rewind($stream);
+        $page = new Page($stream, 'dir/page.md', 'text/html');
+        $documentation->getFiles()->addFile($page);
+
+        // Resolution returns null (climbs above root); must not crash and the
+        // original href must be preserved.
+        (new PathTreatment())->handle($documentation);
+
+        $query = (new HtmlSelector())->query($page->getContents());
+        $this->assertEquals('../../../../outside.md', $query->find('a')->attr('href'));
     }
 
     public function testEncodedLinkResolvesToPage()
