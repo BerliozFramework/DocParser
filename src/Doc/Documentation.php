@@ -17,9 +17,11 @@ namespace Berlioz\DocParser\Doc;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\FileSet;
 use Berlioz\DocParser\Doc\File\Page;
+use DateTimeImmutable;
 
 class Documentation
 {
+    private DateTimeImmutable $date;
     private DocSummary $summary;
     private FileSet $files;
 
@@ -27,9 +29,11 @@ class Documentation
      * DocumentationVersion constructor.
      *
      * @param string $version
+     * @param DateTimeImmutable|null $date
      */
-    public function __construct(private string $version)
+    public function __construct(private string $version, ?DateTimeImmutable $date = null)
     {
+        $this->date = $date ?? new DateTimeImmutable();
         $this->summary = new DocSummary();
         $this->files = new FileSet();
     }
@@ -42,6 +46,7 @@ class Documentation
     public function __debugInfo(): array
     {
         return [
+            'date' => $this->date,
             'version' => $this->version,
             'summary' => $this->summary,
             'files' => $this->files
@@ -56,6 +61,7 @@ class Documentation
     public function __serialize(): array
     {
         return [
+            'date' => $this->date,
             'version' => $this->version,
             'summary' => $this->summary,
             'files' => $this->files
@@ -69,9 +75,20 @@ class Documentation
      */
     public function __unserialize(array $data): void
     {
+        $this->date = $data['date'];
         $this->version = $data['version'];
         $this->summary = $data['summary'];
         $this->files = $data['files'];
+    }
+
+    /**
+     * Get date.
+     *
+     * @return DateTimeImmutable
+     */
+    public function getDate(): DateTimeImmutable
+    {
+        return $this->date;
     }
 
     /**

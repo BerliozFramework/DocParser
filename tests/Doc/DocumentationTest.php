@@ -18,6 +18,7 @@ use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\FileSet;
 use Berlioz\DocParser\Tests\TraitFakeDocumentation;
 use Berlioz\HtmlSelector\HtmlSelector;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class DocumentationTest extends TestCase
@@ -36,6 +37,25 @@ class DocumentationTest extends TestCase
         foreach ($doc->getFiles() as $file) {
             $this->assertNotNull($doc2->getFiles()->findByFilename($file->getFilename()));
         }
+    }
+
+    public function testGetDateDefault()
+    {
+        $before = new DateTimeImmutable();
+        $doc = new Documentation('v1.x');
+        $after = new DateTimeImmutable();
+
+        $this->assertInstanceOf(DateTimeImmutable::class, $doc->getDate());
+        $this->assertGreaterThanOrEqual($before, $doc->getDate());
+        $this->assertLessThanOrEqual($after, $doc->getDate());
+    }
+
+    public function testGetDateInjected()
+    {
+        $date = new DateTimeImmutable('2020-01-01 12:00:00');
+        $doc = new Documentation('v1.x', $date);
+
+        $this->assertEquals($date, $doc->getDate());
     }
 
     public function testGetVersion()
