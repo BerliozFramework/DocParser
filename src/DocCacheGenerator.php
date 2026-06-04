@@ -92,10 +92,6 @@ class DocCacheGenerator
     public function get(string $version): ?Documentation
     {
         try {
-            if (!$this->filesystem->fileExists($this->getDocCacheName($version))) {
-                return null;
-            }
-
             $documentation = $this->filesystem->read($this->getDocCacheName($version));
             $documentation = unserialize($documentation);
 

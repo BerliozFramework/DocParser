@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Remove redundant `fileExists()` round-trip in `DocCacheGenerator::get()`; rely on the existing exception handling (notably faster on remote filesystems like S3). A cache miss now flows through the optional `$errorHandler` like any other read failure
+
 ## [2.3.0] - 2026-06-04
 
 ### Added
