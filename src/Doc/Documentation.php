@@ -75,7 +75,7 @@ class Documentation
      */
     public function __unserialize(array $data): void
     {
-        $this->date = $data['date'];
+        $this->date = $data['date'] ?? new DateTimeImmutable();
         $this->version = $data['version'];
         $this->summary = $data['summary'];
         $this->files = $data['files'];

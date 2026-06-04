@@ -39,6 +39,18 @@ class DocumentationTest extends TestCase
         }
     }
 
+    public function testUnserializeLegacyDataWithoutDate()
+    {
+        $doc = new Documentation('v1.x');
+        $doc->__unserialize([
+            'version' => 'v1.x',
+            'summary' => $doc->getSummary(),
+            'files' => $doc->getFiles(),
+        ]);
+
+        $this->assertInstanceOf(DateTimeImmutable::class, $doc->getDate());
+    }
+
     public function testGetDateDefault()
     {
         $before = new DateTimeImmutable();
