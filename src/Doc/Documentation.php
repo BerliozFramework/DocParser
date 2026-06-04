@@ -18,6 +18,7 @@ use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\FileSet;
 use Berlioz\DocParser\Doc\File\Page;
 use DateTimeImmutable;
+use DateTimeInterface;
 
 class Documentation
 {
@@ -29,13 +30,55 @@ class Documentation
      * DocumentationVersion constructor.
      *
      * @param string $version
+     * @param FileSet|null $files
      * @param DateTimeImmutable|null $date
      */
-    public function __construct(private string $version, ?DateTimeImmutable $date = null)
-    {
-        $this->date = $date ?? new DateTimeImmutable();
+    public function __construct(
+        private string $version,
+        ?FileSet $files = null,
+        ?DateTimeImmutable $date = null
+    ) {
+        $this->files = $files ?? new FileSet();
+        $this->date = $date ?? $this->computeDate($this->files);
         $this->summary = new DocSummary();
-        $this->files = new FileSet();
+    }
+
+    /**
+     * Compute date from files.
+     *
+     * Returns the most recent date among the files. Falls back to the current
+     * date when no file exposes a date.
+     *
+     * @param FileSet $files
+     *
+     * @return DateTimeImmutable
+     */
+    private function computeDate(FileSet $files): DateTimeImmutable
+    {
+        $date = null;
+
+        /** @var FileInterface $file */
+        foreach ($files as $file) {
+            $fileDate = $file->getDatetime();
+
+            if (null === $fileDate) {
+                continue;
+            }
+
+            if (null === $date || $fileDate > $date) {
+                $date = $fileDate;
+            }
+        }
+
+        if ($date instanceof DateTimeImmutable) {
+            return $date;
+        }
+
+        if ($date instanceof DateTimeInterface) {
+            return DateTimeImmutable::createFromInterface($date);
+        }
+
+        return new DateTimeImmutable();
     }
 
     /**
@@ -83,6 +126,11 @@ class Documentation
 
     /**
      * Get date.
+     *
+     * The date is computed at construction time as the most recent date among
+     * the files (or the explicit date passed to the constructor). It is not
+     * recomputed when files are added afterwards: create a new Documentation to
+     * re-evaluate it.
      *
      * @return DateTimeImmutable
      */

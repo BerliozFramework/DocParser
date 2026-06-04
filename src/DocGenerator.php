@@ -16,6 +16,7 @@ namespace Berlioz\DocParser;
 
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
+use Berlioz\DocParser\Doc\File\FileSet;
 use Berlioz\DocParser\Doc\File\RawFile;
 use Berlioz\DocParser\Exception\DocParserException;
 use Berlioz\DocParser\Exception\GeneratorException;
@@ -111,7 +112,7 @@ class DocGenerator
     {
         try {
             ksort($this->parsers);
-            $documentation = new Documentation($version);
+            $files = new FileSet();
 
             $listing =
                 $filesystem
@@ -140,8 +141,10 @@ class DocGenerator
                 }
 
                 $file = $this->handleFile($filesystem, $fileAttributes);
-                $documentation->getFiles()->addFile($file);
+                $files->addFile($file);
             }
+
+            $documentation = new Documentation($version, $files);
 
             $this->doTreatments($documentation);
 

@@ -16,6 +16,7 @@ use Berlioz\DocParser\Doc\DocSummary;
 use Berlioz\DocParser\Doc\Documentation;
 use Berlioz\DocParser\Doc\File\FileInterface;
 use Berlioz\DocParser\Doc\File\FileSet;
+use Berlioz\DocParser\Doc\File\RawFile;
 use Berlioz\DocParser\Tests\TraitFakeDocumentation;
 use Berlioz\HtmlSelector\HtmlSelector;
 use DateTimeImmutable;
@@ -65,9 +66,41 @@ class DocumentationTest extends TestCase
     public function testGetDateInjected()
     {
         $date = new DateTimeImmutable('2020-01-01 12:00:00');
-        $doc = new Documentation('v1.x', $date);
+        $doc = new Documentation('v1.x', null, $date);
 
         $this->assertEquals($date, $doc->getDate());
+    }
+
+    public function testGetDateFromFiles()
+    {
+        $files = new FileSet();
+        $files->addFile($this->makeRawFile('old.md', new DateTimeImmutable('2020-01-01 12:00:00')));
+        $files->addFile($this->makeRawFile('recent.md', new DateTimeImmutable('2022-06-15 08:30:00')));
+        $files->addFile($this->makeRawFile('middle.md', new DateTimeImmutable('2021-03-10 00:00:00')));
+
+        $doc = new Documentation('v1.x', $files);
+
+        $this->assertEquals(new DateTimeImmutable('2022-06-15 08:30:00'), $doc->getDate());
+    }
+
+    public function testGetDateFromFilesWithoutDateFallsBackToNow()
+    {
+        $files = new FileSet();
+        $files->addFile($this->makeRawFile('no-date.md', null));
+
+        $before = new DateTimeImmutable();
+        $doc = new Documentation('v1.x', $files);
+        $after = new DateTimeImmutable();
+
+        $this->assertGreaterThanOrEqual($before, $doc->getDate());
+        $this->assertLessThanOrEqual($after, $doc->getDate());
+    }
+
+    private function makeRawFile(string $filename, ?DateTimeImmutable $datetime): RawFile
+    {
+        $stream = fopen('php://memory', 'r+');
+
+        return new RawFile($stream, $filename, 'text/markdown', $datetime);
     }
 
     public function testGetVersion()
