@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `RawFile::setStream()` now also accepts a lazy `callable(): resource` provider, resolved and memoized on first stream access; `DocCacheGenerator::get()` uses it to defer cached file reads instead of opening every stream upfront (major win on remote filesystems like S3)
 - Remove redundant `fileExists()` round-trip in `DocCacheGenerator::get()`; rely on the existing exception handling (notably faster on remote filesystems like S3). A cache miss now flows through the optional `$errorHandler` like any other read failure
+- `DocCacheGenerator::saveFile()` is now `private` (was `public`); file caching is handled internally by `save()`
+
+### Removed
+
+- `DocCacheGenerator::readFile()` (eager single-file read); cached file streams are now loaded lazily through `get()`
 
 ## [2.3.0] - 2026-06-04
 

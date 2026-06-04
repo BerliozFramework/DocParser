@@ -101,7 +101,7 @@ class DocCacheGenerator
 
             /** @var FileInterface $file */
             foreach ($documentation->getFiles() as $file) {
-                $this->readFile($file);
+                $this->lazyLoadFile($file);
             }
 
             return $documentation;
@@ -140,15 +140,16 @@ class DocCacheGenerator
     ////////////
 
     /**
-     * Read file.
+     * Lazy load file.
+     *
+     * Attaches a provider that opens the cached stream only on first access,
+     * deferring the underlying read (e.g. a remote S3 GET) until needed.
      *
      * @param FileInterface $file
-     *
-     * @throws FilesystemException
      */
-    public function readFile(FileInterface $file): void
+    private function lazyLoadFile(FileInterface $file): void
     {
-        $file->setStream($this->filesystem->readStream($this->getFileCacheName($file)));
+        $file->setStream(fn() => $this->filesystem->readStream($this->getFileCacheName($file)));
     }
 
     /**
@@ -158,7 +159,7 @@ class DocCacheGenerator
      *
      * @throws FilesystemException
      */
-    public function saveFile(FileInterface $file): void
+    private function saveFile(FileInterface $file): void
     {
         $this->filesystem->writeStream(
             $this->getFileCacheName($file),

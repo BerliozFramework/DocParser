@@ -34,20 +34,25 @@ class DocCacheGeneratorTest extends TestCase
             'image/jpg',
             (new DateTimeImmutable())->setTimestamp(filemtime($filename))
         );
+        $expectedContents = $file->getContents();
+
+        $documentation = new Documentation('1.0');
+        $documentation->getFiles()->addFile($file);
 
         $adapter = new InMemoryFilesystemAdapter();
         $filesystem = new Filesystem($adapter);
         $docCacheGenerator = new DocCacheGenerator($filesystem);
 
-        $docCacheGenerator->saveFile($file);
-        $fileCacheName = $docCacheGenerator->getFileCacheName($file);
+        // Save documentation (writes the file stream to cache)
+        $docCacheGenerator->save($documentation);
+        $this->assertTrue($filesystem->fileExists($docCacheGenerator->getFileCacheName($file)));
 
-        $this->assertTrue($filesystem->fileExists($fileCacheName));
+        // Restore documentation and read back the file contents
+        $documentationFromCache = $docCacheGenerator->get($documentation->getVersion());
+        $fileFromCache = $documentationFromCache->getFiles()->findByFilename('assets/anomaly.jpg');
 
-        $fileFromCache = clone $file;
-        $docCacheGenerator->readFile($file);
-
-        $this->assertEquals($file->getContents(), $fileFromCache->getContents());
+        $this->assertNotNull($fileFromCache);
+        $this->assertEquals($expectedContents, $fileFromCache->getContents());
     }
 
     public function testDocumentation()
@@ -84,11 +89,14 @@ class DocCacheGeneratorTest extends TestCase
             (new DateTimeImmutable())->setTimestamp(filemtime($filename))
         );
 
+        $documentation = new Documentation('1.0');
+        $documentation->getFiles()->addFile($file);
+
         $adapter = new InMemoryFilesystemAdapter();
         $filesystem = new Filesystem($adapter);
         $docCacheGenerator = new DocCacheGenerator($filesystem, '/my/prefix');
 
-        $docCacheGenerator->saveFile($file);
+        $docCacheGenerator->save($documentation);
         $fileCacheName = $docCacheGenerator->getFileCacheName($file);
 
         $this->assertEquals('/my/prefix/4b/4b132a542f71168cae423e7f39fe119f', $fileCacheName);

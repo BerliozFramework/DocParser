@@ -115,6 +115,66 @@ class RawFileTest extends TestCase
         $this->assertSame($rawFile->getStream(), $response->getBody()->detach());
     }
 
+    public function testSetStreamWithLazyProviderIsNotCalledUntilAccessed()
+    {
+        $calls = 0;
+        $rawFile = $this->getRawFile();
+        $rawFile->setStream(function () use (&$calls) {
+            $calls++;
+
+            return fopen('php://memory', 'r+');
+        });
+
+        // Provider must not be invoked just by setting it.
+        $this->assertSame(0, $calls);
+
+        // First access resolves the provider.
+        $this->assertIsResource($rawFile->getStream());
+        $this->assertSame(1, $calls);
+
+        // Subsequent accesses reuse the memoized resource (no extra read).
+        $rawFile->getStream();
+        $rawFile->getContents();
+        $this->assertSame(1, $calls);
+    }
+
+    public function testGetContentsResolvesLazyProvider()
+    {
+        $calls = 0;
+        $rawFile = new RawFile(
+            function () use (&$calls) {
+                $calls++;
+                $stream = fopen('php://memory', 'r+');
+                fwrite($stream, 'lazy content');
+
+                return $stream;
+            },
+            'lazy.txt',
+            'text/plain'
+        );
+
+        $this->assertSame(0, $calls);
+        $this->assertSame('lazy content', $rawFile->getContents());
+        $this->assertSame(1, $calls);
+    }
+
+    public function testLazyProviderReturningNonResourceThrows()
+    {
+        $rawFile = $this->getRawFile();
+        $rawFile->setStream(fn() => 'not a resource');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $rawFile->getStream();
+    }
+
+    public function testSetStreamRejectsInvalidArgument()
+    {
+        $rawFile = $this->getRawFile();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $rawFile->setStream('not a resource nor callable');
+    }
+
     public function testSetContentsThenGetContentsAfterRead()
     {
         // Use a read-write memory stream

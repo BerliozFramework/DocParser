@@ -127,11 +127,35 @@ class RawFile implements FileInterface
     }
 
     /**
+     * Resolve the stream.
+     *
+     * If a lazy provider (callable) was set, invoke it on first access, validate
+     * that it returns a resource, and memoize the result so the underlying read
+     * (e.g. a remote S3 GET) happens only once.
+     *
+     * @return resource
+     */
+    private function resolveStream()
+    {
+        if (is_callable($this->stream)) {
+            $stream = ($this->stream)();
+
+            if (!is_resource($stream)) {
+                throw new InvalidArgumentException('Stream provider must return a valid stream resource');
+            }
+
+            $this->stream = $stream;
+        }
+
+        return $this->stream;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getStream()
     {
-        return $this->stream;
+        return $this->resolveStream();
     }
 
     /**
@@ -139,8 +163,8 @@ class RawFile implements FileInterface
      */
     public function setStream($stream): void
     {
-        if (!is_resource($stream)) {
-            throw new InvalidArgumentException('Argument must a valid stream resource');
+        if (!is_resource($stream) && !is_callable($stream)) {
+            throw new InvalidArgumentException('Argument must be a valid stream resource or a callable provider');
         }
 
         $this->stream = $stream;
@@ -151,7 +175,7 @@ class RawFile implements FileInterface
      */
     public function getContents(): string
     {
-        if (($contents = stream_get_contents($this->stream, -1, 0)) === false) {
+        if (($contents = stream_get_contents($this->resolveStream(), -1, 0)) === false) {
             throw new RuntimeException('Unable to get contents of stream');
         }
 
@@ -163,13 +187,15 @@ class RawFile implements FileInterface
      */
     public function setContents(string $contents): void
     {
-        if (@ftruncate($this->stream, 0) === false) {
+        $stream = $this->resolveStream();
+
+        if (@ftruncate($stream, 0) === false) {
             throw new RuntimeException('Unable to truncate contents of stream');
         }
 
-        rewind($this->stream);
+        rewind($stream);
 
-        if (@fwrite($this->stream, $contents) === false) {
+        if (@fwrite($stream, $contents) === false) {
             throw new RuntimeException('Unable to write contents of stream');
         }
     }

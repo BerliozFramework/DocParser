@@ -78,7 +78,12 @@ interface FileInterface
     /**
      * Set stream.
      *
-     * @param resource $stream
+     * Accepts either an already-opened resource, or a callable acting as a lazy
+     * provider. The callable must return a resource and is invoked only on first
+     * access (getStream/getContents/setContents), then memoized. This allows
+     * deferring remote reads (e.g. S3) until the stream is actually needed.
+     *
+     * @param resource|callable(): resource $stream
      */
     public function setStream($stream): void;
 
