@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-06-04
+
 ### Changed
 
 - `RawFile::setStream()` now also accepts a lazy `callable(): resource` provider, resolved and memoized on first stream access; `DocCacheGenerator::get()` uses it to defer cached file reads instead of opening every stream upfront (major win on remote filesystems like S3)
