@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `AnchorTreatment`, enabled by default after `PageSummaryTreatment`: fragments of internal links written with GitHub-style anchors (flat slug of the heading, e.g. `page.md#my-heading`) are resolved to the id of the matching heading of the target page (e.g. `#parent-my-heading`). Fragments matching an existing id, unknown fragments and external links are left unchanged
+
 ## [2.4.0] - 2026-06-04
 
 ### Changed

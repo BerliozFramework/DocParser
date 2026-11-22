@@ -22,6 +22,7 @@ use Berlioz\DocParser\Exception\DocParserException;
 use Berlioz\DocParser\Exception\GeneratorException;
 use Berlioz\DocParser\Exception\ParserException;
 use Berlioz\DocParser\Parser\ParserInterface;
+use Berlioz\DocParser\Treatment\AnchorTreatment;
 use Berlioz\DocParser\Treatment\DocSummaryTreatment;
 use Berlioz\DocParser\Treatment\PageSummaryTreatment;
 use Berlioz\DocParser\Treatment\PathTreatment;
@@ -53,6 +54,7 @@ class DocGenerator
         $this->addTreatment(new TitleTreatment($this), 20);
         $this->addTreatment(new PageSummaryTreatment(), 50);
         $this->addTreatment(new DocSummaryTreatment(), 50);
+        $this->addTreatment(new AnchorTreatment(), 60);
     }
 
     /**
