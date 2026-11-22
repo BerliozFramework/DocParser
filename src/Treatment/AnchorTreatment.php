@@ -105,35 +105,11 @@ class AnchorTreatment implements TreatmentInterface
      */
     public function getHrefResolved(string $href, Page $page, Documentation $documentation): string
     {
-        if (!str_contains($href, '#')) {
+        if (null === ($fragment = $this->getFragment($href))) {
             return $href;
         }
 
-        $url = parse_url($href);
-
-        if (false === $url || isset($url['scheme']) || isset($url['host'])) {
-            return $href;
-        }
-
-        $fragment = rawurldecode($url['fragment'] ?? '');
-
-        if ('' === $fragment) {
-            return $href;
-        }
-
-        // Target page
-        $targetPage = $page;
-        if (isset($url['path'])) {
-            $targetPath = b_resolve_absolute_path('/' . $page->getPath(), $url['path']);
-
-            if (null === $targetPath) {
-                return $href;
-            }
-
-            $targetPage = $documentation->getFiles()->findByPath($targetPath);
-        }
-
-        if (!$targetPage instanceof Page) {
+        if (null === ($targetPage = $this->getTargetPage($href, $page, $documentation))) {
             return $href;
         }
 
@@ -145,6 +121,59 @@ class AnchorTreatment implements TreatmentInterface
         }
 
         return explode('#', $href, 2)[0] . '#' . rawurlencode($anchors['slugs'][$fragment]);
+    }
+
+    /**
+     * Get decoded fragment of an internal link.
+     *
+     * @param string $href
+     *
+     * @return string|null Null if the link is external or has no fragment
+     */
+    private function getFragment(string $href): ?string
+    {
+        if (!str_contains($href, '#')) {
+            return null;
+        }
+
+        $url = parse_url($href);
+
+        if (false === $url || isset($url['scheme']) || isset($url['host'])) {
+            return null;
+        }
+
+        $fragment = rawurldecode($url['fragment'] ?? '');
+
+        return '' === $fragment ? null : $fragment;
+    }
+
+    /**
+     * Get page targeted by an internal link.
+     *
+     * @param string $href
+     * @param Page $page Page containing the link
+     * @param Documentation $documentation
+     *
+     * @return Page|null Null if the link does not target a page of the documentation
+     */
+    private function getTargetPage(string $href, Page $page, Documentation $documentation): ?Page
+    {
+        $path = parse_url($href, PHP_URL_PATH);
+
+        // Pure anchor
+        if (!is_string($path)) {
+            return $page;
+        }
+
+        $targetPath = b_resolve_absolute_path('/' . $page->getPath(), $path);
+
+        if (null === $targetPath) {
+            return null;
+        }
+
+        $targetPage = $documentation->getFiles()->findByPath($targetPath);
+
+        return $targetPage instanceof Page ? $targetPage : null;
     }
 
     /**
@@ -180,8 +209,10 @@ class AnchorTreatment implements TreatmentInterface
             }
             $occurrences[$slug] = 0;
 
-            if (null !== ($id = $header->attr('id')) && '' !== $id) {
-                $anchors['slugs'][$slug] = (string)$id;
+            $headingId = (string)$header->attr('id');
+
+            if ('' !== $headingId) {
+                $anchors['slugs'][$slug] = $headingId;
             }
         }
 
