@@ -116,6 +116,8 @@ Some treatments are activate by default:
 
 - `Berlioz\DocParser\Treatment\DocSummaryTreatment`: generate the summary of documentation
 - `Berlioz\DocParser\Treatment\PageSummaryTreatment`: generate the pages summaries
+- `Berlioz\DocParser\Treatment\AnchorTreatment`: resolve GitHub-style anchors of internal links (`page.md#my-heading`) to
+  the ids of the headings
 - `Berlioz\DocParser\Treatment\PathTreatment`: resolve all links to transform in relative links
 - `Berlioz\DocParser\Treatment\TitleTreatment`: extract title of page and set to `Page` object
 
